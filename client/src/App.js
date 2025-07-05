@@ -1,0 +1,30 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from "./pages/home";
+import TermsOfUse from './pages/TermsOfUse';
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import PrivacyPolicy from "./pages/PrivacyPolicy ";
+import FraudAlert from "./pages/FraudAlert";
+import FounderLetter from "./pages/FounderLetter";
+
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/terms-of-use" element={<TermsOfUse />} />
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+<Route path="/fraud-alert" element={<FraudAlert />} />
+<Route path="/founder-letter" element={<FounderLetter />} />
+
+
+
+      </Routes>
+      <Footer />
+    </BrowserRouter>
+  );
+}
+
+export default App;
