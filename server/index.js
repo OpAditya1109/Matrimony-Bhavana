@@ -7,11 +7,21 @@ import User from "./models/User.js";
 dotenv.config();
 
 const app = express();
+const allowedOrigins = [
+  'https://www.bhavanamatrimony.com',
+  'https://matrimony-bhavana.onrender.com'
+];
+
 app.use(cors({
-  origin: 'https://www.bhavanamatrimony.com', // Your domain
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
-
 app.use(express.json());
 
 // MongoDB Connection
