@@ -7,7 +7,11 @@ import User from "./models/User.js";
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: 'https://www.bhavanamatrimony.com', // Your domain
+  credentials: true
+}));
+
 app.use(express.json());
 
 // MongoDB Connection
