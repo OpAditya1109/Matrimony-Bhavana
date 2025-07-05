@@ -7,20 +7,8 @@ import User from "./models/User.js";
 dotenv.config();
 
 const app = express();
-const allowedOrigins = [
-  'https://www.bhavanamatrimony.com',
-  'https://matrimony-bhavana.onrender.com'
-];
-
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true
+  origin: '*'
 }));
 app.use(express.json());
 
