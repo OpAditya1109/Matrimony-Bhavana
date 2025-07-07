@@ -86,9 +86,9 @@ const PrivacyPolicy = () => {
         For any questions or concerns about this Privacy Policy, please contact us:
       </p>
       <ul className="list-disc pl-6 mt-2">
-        <li><strong>Email:</strong> support@bhavnamatrimony.com</li>
-        <li><strong>Phone:</strong> [Your Support Phone Number]</li>
-        <li><strong>Address:</strong> [Your Business Address]</li>
+        <li><strong>Email:</strong> matrimonybhavana@gmail.com</li>
+        <li><strong>Phone:</strong> 92700 96633</li>
+        {/* <li><strong>Address:</strong> [Your Business Address]</li> */}
       </ul>
     </div>
   );

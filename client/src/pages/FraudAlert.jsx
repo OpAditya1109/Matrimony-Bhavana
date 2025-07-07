@@ -46,8 +46,8 @@ const FraudAlert = () => {
         If you suspect any fraudulent activity or encounter suspicious profiles, please report them immediately to us via:
       </p>
       <ul className="list-disc pl-6 space-y-2">
-        <li><strong>Email:</strong> support@bhavnamatrimony.com</li>
-        <li><strong>Phone:</strong> [Your Support Phone Number]</li>
+       <li><strong>Email:</strong> matrimonybhavana@gmail.com</li>
+        <li><strong>Phone:</strong> 92700 96633</li>
       </ul>
 
       <h2 className="text-2xl font-semibold mt-6 mb-2">5. Disclaimer</h2>

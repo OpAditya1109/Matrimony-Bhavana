@@ -8,12 +8,11 @@ const StartFormModal = ({ isOpen, onClose }) => {
     profileFor: "",
     firstName: "",
     lastName: "",
-    dobDay: "",
-    dobMonth: "",
-    dobYear: "",
+    dob: "",
     religion: "",
     community: "",
     location: "",
+    address: "",
     email: "",
     phone: "",
     fatherName: "",
@@ -27,11 +26,42 @@ const StartFormModal = ({ isOpen, onClose }) => {
     work: "",
     education: "",
     income: "",
+    height: "",
+    weight: "",
     diet: "",
   });
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    const nameRegex = /^[a-zA-Z\s.'-]*$/;
+    const numberRegex = /^[0-9]*$/;
+
+    const nameFields = [
+      "firstName",
+      "lastName",
+      "fatherName",
+      "motherName",
+      "fatherProfession",
+      "motherProfession",
+      "community",
+      "work",
+      "education",
+    ];
+
+    const numericFields = ["phone", "fatherPhone", "motherPhone", "height", "weight"];
+
+    if (nameFields.includes(name)) {
+      if (value === "" || nameRegex.test(value)) {
+        setFormData({ ...formData, [name]: value });
+      }
+    } else if (numericFields.includes(name)) {
+      if (value === "" || numberRegex.test(value)) {
+        setFormData({ ...formData, [name]: value });
+      }
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const nextStep = () => setStep(step + 1);
@@ -40,14 +70,16 @@ const StartFormModal = ({ isOpen, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-   const response = await fetch("https://matrimony-bhavana.onrender.com/api/users", {
-
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        "https://matrimony-bhavana.onrender.com/api/users",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       if (response.ok) {
         console.log("User saved successfully");
@@ -72,9 +104,7 @@ const StartFormModal = ({ isOpen, onClose }) => {
       return (
         formData.firstName.trim() !== "" &&
         formData.lastName.trim() !== "" &&
-        formData.dobDay.trim() !== "" &&
-        formData.dobMonth.trim() !== "" &&
-        formData.dobYear.trim() !== ""
+        formData.dob.trim() !== ""
       );
     }
     if (step === 3) {
@@ -97,11 +127,28 @@ const StartFormModal = ({ isOpen, onClose }) => {
         formData.work.trim() !== "" &&
         formData.education.trim() !== "" &&
         formData.income.trim() !== "" &&
-        formData.diet.trim() !== ""
+        formData.height.trim() !== "" &&
+        formData.weight.trim() !== "" &&
+        formData.diet.trim() !== "" &&
+        formData.address.trim() !== ""
       );
     }
     return false;
   };
+
+  const cities = [
+    "Mumbai",
+    "Delhi",
+    "Bangalore",
+    "Hyderabad",
+    "Ahmedabad",
+    "Pune",
+    "Kolkata",
+    "Chennai",
+    "Jaipur",
+    "Lucknow",
+    "Other",
+  ];
 
   if (!isOpen) return null;
 
@@ -135,13 +182,23 @@ const StartFormModal = ({ isOpen, onClose }) => {
           <form onSubmit={handleSubmit} className="space-y-4">
             {step === 1 && (
               <div className="flex flex-wrap gap-3">
-                {["Myself", "My Son", "My Daughter", "My Brother", "My Sister", "My Friend", "My Relative"].map((option) => (
+                {[
+                  "Myself",
+                  "My Son",
+                  "My Daughter",
+                  "My Brother",
+                  "My Sister",
+                  "My Friend",
+                  "My Relative",
+                ].map((option) => (
                   <button
                     key={option}
                     type="button"
                     onClick={() => setFormData({ ...formData, profileFor: option })}
                     className={`border rounded-full px-4 py-2 ${
-                      formData.profileFor === option ? "bg-red-500 text-white" : "bg-white"
+                      formData.profileFor === option
+                        ? "bg-red-500 text-white"
+                        : "bg-white"
                     }`}
                   >
                     {option}
@@ -153,7 +210,9 @@ const StartFormModal = ({ isOpen, onClose }) => {
             {step === 2 && (
               <>
                 <div>
-                  <label>First Name <span className="text-red-500">*</span></label>
+                  <label>
+                    First Name <span className="text-red-500">*</span>
+                  </label>
                   <input
                     name="firstName"
                     value={formData.firstName}
@@ -163,7 +222,9 @@ const StartFormModal = ({ isOpen, onClose }) => {
                   />
                 </div>
                 <div>
-                  <label>Last Name <span className="text-red-500">*</span></label>
+                  <label>
+                    Last Name <span className="text-red-500">*</span>
+                  </label>
                   <input
                     name="lastName"
                     value={formData.lastName}
@@ -172,39 +233,19 @@ const StartFormModal = ({ isOpen, onClose }) => {
                     className="border p-2 rounded w-full"
                   />
                 </div>
-                <div className="flex gap-2">
+                <div>
+                  <label>
+                    Date of Birth <span className="text-red-500">*</span>
+                  </label>
                   <input
-                    type="number"
-                    name="dobDay"
-                    placeholder="DD"
-                    min="1"
-                    max="31"
-                    value={formData.dobDay}
+                    type="date"
+                    name="dob"
+                    value={formData.dob}
                     onChange={handleChange}
                     required
-                    className="border p-2 rounded w-20"
-                  />
-                  <input
-                    type="number"
-                    name="dobMonth"
-                    placeholder="MM"
-                    min="1"
-                    max="12"
-                    value={formData.dobMonth}
-                    onChange={handleChange}
-                    required
-                    className="border p-2 rounded w-20"
-                  />
-                  <input
-                    type="number"
-                    name="dobYear"
-                    placeholder="YYYY"
-                    min="1900"
-                    max="2025"
-                    value={formData.dobYear}
-                    onChange={handleChange}
-                    required
-                    className="border p-2 rounded w-28"
+                    max={new Date().toISOString().split("T")[0]}
+                    onFocus={(e) => e.target.showPicker && e.target.showPicker()}
+                    className="border p-2 rounded w-full"
                   />
                 </div>
               </>
@@ -213,7 +254,9 @@ const StartFormModal = ({ isOpen, onClose }) => {
             {step === 3 && (
               <>
                 <div>
-                  <label>Religion <span className="text-red-500">*</span></label>
+                  <label>
+                    Religion <span className="text-red-500">*</span>
+                  </label>
                   <select
                     name="religion"
                     value={formData.religion}
@@ -231,7 +274,9 @@ const StartFormModal = ({ isOpen, onClose }) => {
                   </select>
                 </div>
                 <div>
-                  <label>Community (Caste) <span className="text-red-500">*</span></label>
+                  <label>
+                    Community (Caste) <span className="text-red-500">*</span>
+                  </label>
                   <input
                     name="community"
                     value={formData.community}
@@ -241,14 +286,23 @@ const StartFormModal = ({ isOpen, onClose }) => {
                   />
                 </div>
                 <div>
-                  <label>Location (City/State) <span className="text-red-500">*</span></label>
-                  <input
+                  <label>
+                    Location (City) <span className="text-red-500">*</span>
+                  </label>
+                  <select
                     name="location"
                     value={formData.location}
                     onChange={handleChange}
                     required
                     className="border p-2 rounded w-full"
-                  />
+                  >
+                    <option value="">Select</option>
+                    {cities.map((city) => (
+                      <option key={city} value={city}>
+                        {city}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </>
             )}
@@ -257,32 +311,55 @@ const StartFormModal = ({ isOpen, onClose }) => {
               <>
                 {[
                   { label: "Email ID", name: "email", type: "email" },
-                  { label: "Phone Number", name: "phone", type: "tel" },
+                  { label: "Phone Number", name: "phone", type: "tel", maxLength: 10 },
                   { label: "Father's Name", name: "fatherName" },
-                  { label: "Father's Phone", name: "fatherPhone", type: "tel" },
+                  { label: "Father's Phone", name: "fatherPhone", type: "tel", maxLength: 10 },
                   { label: "Father's Profession", name: "fatherProfession" },
                   { label: "Mother's Name", name: "motherName" },
-                  { label: "Mother's Phone", name: "motherPhone", type: "tel" },
+                  { label: "Mother's Phone", name: "motherPhone", type: "tel", maxLength: 10 },
                   { label: "Mother's Profession", name: "motherProfession" },
                   { label: "Brother Details (Optional)", name: "brotherDetails" },
                   { label: "Sister Details (Optional)", name: "sisterDetails" },
                   { label: "Work", name: "work" },
                   { label: "Education", name: "education" },
                   { label: "Income", name: "income" },
+                  { label: "Height (in cm)", name: "height" },
+                  { label: "Weight (in kg)", name: "weight" },
+                  { label: "Address", name: "address" },
                   { label: "Diet", name: "diet" },
                 ].map((field) => (
                   <div key={field.name}>
                     <label>
-                      {field.label} {field.name !== "brotherDetails" && field.name !== "sisterDetails" && <span className="text-red-500">*</span>}
+                      {field.label}{" "}
+                      {field.name !== "brotherDetails" && field.name !== "sisterDetails" && (
+                        <span className="text-red-500">*</span>
+                      )}
                     </label>
-                    <input
-                      name={field.name}
-                      type={field.type || "text"}
-                      value={formData[field.name]}
-                      onChange={handleChange}
-                      required={!(field.name === "brotherDetails" || field.name === "sisterDetails")}
-                      className="border p-2 rounded w-full"
-                    />
+                    {field.name === "diet" ? (
+                      <select
+                        name="diet"
+                        value={formData.diet}
+                        onChange={handleChange}
+                        required
+                        className="border p-2 rounded w-full"
+                      >
+                        <option value="">Select</option>
+                        <option>Veg</option>
+                        <option>Non-Veg</option>
+                        <option>Jain</option>
+                        <option>Eggetarian</option>
+                      </select>
+                    ) : (
+                      <input
+                        name={field.name}
+                        type={field.type || "text"}
+                        value={formData[field.name]}
+                        onChange={handleChange}
+                        required={field.name !== "brotherDetails" && field.name !== "sisterDetails"}
+                        maxLength={field.maxLength || undefined}
+                        className="border p-2 rounded w-full"
+                      />
+                    )}
                   </div>
                 ))}
               </>
@@ -311,11 +388,7 @@ const StartFormModal = ({ isOpen, onClose }) => {
                   Submit
                 </button>
               )}
-              <button
-                type="button"
-                onClick={onClose}
-                className="px-4 py-2 border rounded"
-              >
+              <button type="button" onClick={onClose} className="px-4 py-2 border rounded">
                 Cancel
               </button>
             </div>

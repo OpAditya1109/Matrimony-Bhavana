@@ -9,7 +9,7 @@ const HeroSection = () => {
       <div className="absolute inset-0 bg-black opacity-40"></div>
       <div className="relative z-10 flex flex-col items-center justify-center h-full text-white">
         <h1 className="text-4xl font-bold mb-4 text-center">The India's No.1 Matchmaking Service</h1>
-        <p className="mb-6 text-center">Search by City, Profession & Community</p>
+        <p className="mb-6 text-center">Start Your Search for Life Partner</p>
 
         <button
           onClick={() => setIsModalOpen(true)}

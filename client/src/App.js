@@ -6,7 +6,8 @@ import Footer from "./components/Footer";
 import PrivacyPolicy from "./pages/PrivacyPolicy ";
 import FraudAlert from "./pages/FraudAlert";
 import FounderLetter from "./pages/FounderLetter";
-
+import Aboutus from "./pages/AboutUs";
+import ContactUs from "./pages/ContactUs";
 
 function App() {
   return (
@@ -18,6 +19,8 @@ function App() {
                 <Route path="/privacy-policy" element={<PrivacyPolicy />} />
 <Route path="/fraud-alert" element={<FraudAlert />} />
 <Route path="/founder-letter" element={<FounderLetter />} />
+<Route path="/aboutus" element={<Aboutus />} />
+<Route path="/contactus" element={<ContactUs />} />
 
 
 

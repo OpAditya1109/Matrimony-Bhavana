@@ -9,10 +9,10 @@ const Footer = () => {
       </p>
       <div className="flex justify-center flex-wrap gap-6 mb-4">
           <a href="/" className="hover:underline">Home</a>
-        <a href="#" className="hover:underline">About</a>
-        <a href="#" className="hover:underline">Privacy</a>
-        <a href="#" className="hover:underline">Help</a>
-        <a href="#" className="hover:underline">Contact</a>
+        <a href="/aboutus" className="hover:underline">About</a>
+        {/* <a href="#" className="hover:underline">Privacy</a> */}
+        {/* <a href="#" className="hover:underline">Help</a> */}
+        <a href="/contactus" className="hover:underline">Contact</a>
         <a href="/founder-letter" className="hover:underline">Founder Letter</a>
        <Link to="/terms-of-use" className="hover:underline">Terms of Use</Link>
               <Link to="/privacy-policy" className="hover:underline">Privacy Policy</Link>
