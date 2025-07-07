@@ -13,7 +13,7 @@ const PrivacyPolicy = () => {
       }}
     >
       <h1 className="text-3xl font-bold mb-4">Privacy Policy</h1>
-      <p className="mb-4">Effective Date: [Date]</p>
+      {/* <p className="mb-4">Effective Date: [Date]</p> */}
 
       <p className="mb-4">
         Welcome to <strong>Bhavna Matrimony</strong> ("we," "our," "us"). We are committed to protecting your privacy. This Privacy Policy explains how we collect, use, and protect your personal information when you use our website and services.
