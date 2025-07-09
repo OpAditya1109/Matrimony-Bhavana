@@ -1,73 +1,66 @@
-const PlansSection = () => {
-  const plans = [
+const ServicesSection = () => {
+  const services = [
     {
       id: 1,
-      name: "Basic Plan",
-      price: "₹1499 (3 महीने के लिए)",
-      features: [
-        "आपकी प्रोफ़ाइल सभी उपयोगकर्ताओं को दिखाई देगी",
-        "प्रति माह 25 संपर्क नंबर देखने की अनुमति",
-        "50 प्रोफाइल्स को इंटरेस्ट भेजने की सुविधा",
-        "सीमित चैट एक्सेस (केवल जब दोनों पक्ष इंटरेस्ट भेजें)",
-        "ईमेल के माध्यम से ग्राहक सहायता",
-        "मुफ्त सामान्य कुंडली मिलान सुविधा",
-      ],
+      name: "Corporate Parties",
+      image: "corporate.jpg", // Replace with actual image paths
+      description: "Professional event management for corporate meetings, conferences, and celebrations.",
     },
     {
       id: 2,
-      name: "Premium Plan",
-      price: "₹2499 (6 महीने)",
-      features: [
-        "Basic Plan की सभी सुविधाएं शामिल",
-        "प्रति माह 100 संपर्क नंबर देखने की अनुमति",
-        "अनलिमिटेड प्रोफाइल्स को इंटरेस्ट भेज सकते हैं",
-        "सर्च रिजल्ट में आपकी प्रोफ़ाइल ऊपर दिखाई देगी",
-        "सभी सदस्यों से डायरेक्ट चैट करने की सुविधा",
-        "WhatsApp और ईमेल द्वारा ग्राहक सहायता",
-      ],
+      name: "Wedding Planner",
+      image: "wedding_planner.jpg",
+      description: "Complete wedding planning services including decor, catering, and logistics.",
     },
     {
       id: 3,
-      name: "Elite Plan",
-      price: "₹4999 (12 महीने)",
-      features: [
-        "Premium Plan की सभी सुविधाएं शामिल",
-        "अमर्यादित संपर्क नंबर देखने की सुविधा",
-        "प्रोफाइल पर वेरीफाइड बैज मिलेगा",
-        "सर्च में आपकी प्रोफाइल टॉप पर दिखाई देगी",
-        "एक बार रिलेशनशिप मैनेजर से प्रोफाइल गाइडेंस कॉल",
-        "पर्सनलाइज्ड मैच सुझाव मिलेंगे",
-        "प्राथमिकता ग्राहक सहायता – कॉल, WhatsApp और ईमेल द्वारा",
-      ],
+      name: "Private Party",
+      image: "private_party.jpg",
+      description: "Exclusive private party planning for birthdays, anniversaries, and special occasions.",
+    },
+    {
+      id: 4,
+      name: "Destination Wedding",
+      image: "destination_wedding.jpg",
+      description: "Exotic destination wedding planning for an unforgettable celebration.",
+    },
+    {
+      id: 5,
+      name: "Astrology",
+      image: "astrology.jpg",
+      description: "Astrology consultations for marriage compatibility and life guidance.",
+    },
+    {
+      id: 6,
+      name: "Marriage Counseling",
+      image: "marriage_counselling.webp",
+      description: "Expert marriage counseling services to strengthen relationships and resolve issues.",
     },
   ];
 
   return (
     <section className="py-16">
       <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">
-        Choose the Best Plan for You
+        Our Services
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10 px-4 max-w-7xl mx-auto">
-        {plans.map((plan) => (
+        {services.map((service) => (
           <div
-            key={plan.id}
-            className="bg-pink-50 border border-red-200 rounded-3xl shadow-md p-8 hover:border-red-400 hover:shadow-lg transition duration-300"
+            key={service.id}
+            className="relative rounded-3xl overflow-hidden shadow-lg group"
           >
-            <h3 className="text-2xl font-bold text-center text-red-600 mb-2">
-              {plan.name}
-            </h3>
-            <p className="text-center text-lg font-semibold text-gray-700 mb-6">
-              {plan.price}
-            </p>
-            <ul className="space-y-3 text-gray-700 text-base">
-              {plan.features.map((feature, index) => (
-                <li key={index} className="flex items-start">
-                  <span className="mr-2 text-green-500">✔️</span>
-                  <span>{feature}</span>
-                </li>
-              ))}
-            </ul>
+            <img
+              src={service.image}
+              alt={service.name}
+              className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
+            />
+            <div className="absolute inset-0 bg-black bg-opacity-60 flex flex-col justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 text-center px-4">
+              <h3 className="text-2xl font-bold text-white mb-2">
+                {service.name}
+              </h3>
+              <p className="text-white text-base">{service.description}</p>
+            </div>
           </div>
         ))}
       </div>
@@ -75,4 +68,4 @@ const PlansSection = () => {
   );
 };
 
-export default PlansSection;
+export default ServicesSection;
