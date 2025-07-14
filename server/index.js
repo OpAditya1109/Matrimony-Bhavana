@@ -3,7 +3,8 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 import User from "./models/User.js";
-const otpRoutes = require("./routes/otp.js");
+import otpRoutes from "./routes/otp.js";
+
 dotenv.config();
 
 const app = express();
