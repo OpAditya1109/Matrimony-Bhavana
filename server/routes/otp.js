@@ -1,7 +1,7 @@
-const express = require("express");
-const nodemailer = require("nodemailer");
-const router = express.Router();
+import express from "express";
+import nodemailer from "nodemailer";
 
+const router = express.Router();
 const otps = {}; // Store OTPs temporarily
 
 const transporter = nodemailer.createTransport({
@@ -34,11 +34,11 @@ router.post("/send-otp", async (req, res) => {
 router.post("/verify-otp", (req, res) => {
   const { email, otp } = req.body;
   if (otps[email] === otp) {
-    delete otps[email]; // Remove after use
+    delete otps[email];
     res.json({ success: true });
   } else {
     res.status(400).json({ success: false, message: "Invalid OTP" });
   }
 });
 
-module.exports = router;
+export default router; // ✅ Export as default for ESM
