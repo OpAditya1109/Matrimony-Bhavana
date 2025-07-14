@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 import User from "./models/User.js";
-
+const otpRoutes = require("./routes/otp.js");
 dotenv.config();
 
 const app = express();
@@ -67,6 +67,7 @@ app.post("/api/users", async (req, res) => {
   }
 });
 
+app.use("/api", otpRoutes);
 
 
 const PORT = process.env.PORT || 5000;
