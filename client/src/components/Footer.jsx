@@ -21,29 +21,32 @@ const Footer = () => {
         simple objective - helping people find happiness.
       </p>
 
-      <div className="flex justify-center flex-wrap gap-6 mb-4">
-        <a href="/" className="hover:underline">
-          Home
-        </a>
-        <a href="/aboutus" className="hover:underline">
-          About
-        </a>
-        <a href="/contactus" className="hover:underline">
-          Contact
-        </a>
-        <a href="/founder-letter" className="hover:underline">
-          Founder Letter
-        </a>
-        <Link to="/terms-of-use" className="hover:underline">
-          Terms of Use
-        </Link>
-        <Link to="/privacy-policy" className="hover:underline">
-          Privacy Policy
-        </Link>
-        <Link to="/fraud-alert" className="hover:underline">
-          Fraud Alert
-        </Link>
-      </div>
+    <div className="flex justify-center flex-wrap gap-6 mb-4">
+  <a href="/" className="hover:underline">
+    Home
+  </a>
+  <a href="/aboutus" className="hover:underline">
+    About
+  </a>
+  <a href="/contactus" className="hover:underline">
+    Contact
+  </a>
+  <a href="/founder-letter" className="hover:underline">
+    Founder Letter
+  </a>
+  <Link to="/terms-of-use" className="hover:underline">
+    Terms of Use
+  </Link>
+  <Link to="/privacy-policy" className="hover:underline">
+    Privacy Policy
+  </Link>
+  <Link to="/fraud-alert" className="hover:underline">
+    Fraud Alert
+  </Link>
+  <Link to="/blog" className="hover:underline">
+    Blog
+  </Link>
+</div>
 
       {/* Social Media Icons */}
       <div className="flex justify-center gap-4 mb-4 text-xl text-gray-600 flex-wrap">

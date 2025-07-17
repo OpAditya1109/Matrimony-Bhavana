@@ -8,6 +8,7 @@ import FraudAlert from "./pages/FraudAlert";
 import FounderLetter from "./pages/FounderLetter";
 import Aboutus from "./pages/AboutUs";
 import ContactUs from "./pages/ContactUs";
+import Blog from "./pages/Blogs"
 
 function App() {
   return (
@@ -21,7 +22,7 @@ function App() {
 <Route path="/founder-letter" element={<FounderLetter />} />
 <Route path="/aboutus" element={<Aboutus />} />
 <Route path="/contactus" element={<ContactUs />} />
-
+<Route path="/blog" element={<Blog />} />
 
 
       </Routes>
