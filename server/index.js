@@ -5,6 +5,7 @@ import cors from "cors";
 import User from "./models/User.js";
 import otpRoutes from "./routes/otp.js";
 
+
 dotenv.config();
 
 const app = express();
