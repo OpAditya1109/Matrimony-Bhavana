@@ -21,7 +21,11 @@ mongoose
 app.get("/", (req, res) => {
   res.send("Matrimony Server is Running 🚀");
 });
-
+app.post("/api/check-user", async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+  res.json({ exists: !!user });
+});
 // Create User with custom userId
 app.post("/api/users", async (req, res) => {
   try {
