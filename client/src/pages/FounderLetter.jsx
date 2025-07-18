@@ -16,6 +16,16 @@ const FounderLetter = () => {
         Founder&apos;s Letter – From the Heart of Bhavana Matrimony
       </h1>
 
+      {/* Audio section */}
+      <div className="mb-6">
+        <h2 className="text-xl font-semibold mb-2">🎧 Voice Message from the Founder</h2>
+       <audio controls className="w-full">
+  <source src="/founder-message-about-our-services.mpeg" />
+  Your browser does not support the audio element.
+</audio>
+
+      </div>
+
       <p className="mb-4">Dear Member,</p>
       <p className="mb-4">
         Warm greetings to you.
