@@ -9,7 +9,8 @@ import FounderLetter from "./pages/FounderLetter";
 import Aboutus from "./pages/AboutUs";
 import ContactUs from "./pages/ContactUs";
 import Blog from "./pages/Blogs"
-
+import MainPage from "./pages/MainPage";
+import ProfilePage from "./pages/ProfilePages"
 function App() {
   return (
     <BrowserRouter>
@@ -23,8 +24,8 @@ function App() {
 <Route path="/aboutus" element={<Aboutus />} />
 <Route path="/contactus" element={<ContactUs />} />
 <Route path="/blog" element={<Blog />} />
-
-
+  <Route path="/main" element={<MainPage />} />
+<Route path="/profile" element={<ProfilePage />} />
       </Routes>
       <Footer />
     </BrowserRouter>

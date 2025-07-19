@@ -74,6 +74,16 @@ app.post("/api/users", async (req, res) => {
 });
 
 app.use("/api", otpRoutes);
+// GET user by email
+app.get("/api/users/:email", async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.params.email }); // Replace with your DB logic
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 
 const PORT = process.env.PORT || 5000;

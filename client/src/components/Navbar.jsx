@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Logo from "../assets/Matrimony-logo-wbg.png";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [showLogin, setShowLogin] = useState(false);
@@ -8,18 +9,18 @@ const Navbar = () => {
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
-
+ const navigate = useNavigate();
   const handleSendOtp = async (e) => {
     e.preventDefault();
     setError("");
 
     try {
       // Step 1: Check if user exists
-      const check = await axios.post("/api/check-user", { email });
+      const check = await axios.post("https://matrimony-bhavana.onrender.com/api/check-user", { email });
 
       if (check.data.exists) {
         // Step 2: Send OTP
-        await axios.post("/api/send-otp", { email });
+        await axios.post("https://matrimony-bhavana.onrender.com/api/send-otp", { email });
         setStep(2); // move to OTP input
       } else {
         setError("User not registered.");
@@ -35,11 +36,12 @@ const Navbar = () => {
     setError("");
 
     try {
-      const res = await axios.post("/api/verify-otp", { email, otp });
+      const res = await axios.post("https://matrimony-bhavana.onrender.com/api/verify-otp", { email, otp });
 
-      if (res.data.verified) {
+     if (res.data.success)  {
         setShowLogin(false);
-        alert("Login successful!");
+         localStorage.setItem("userEmail", email);
+        navigate("/main");
       } else {
         setError("Invalid OTP");
       }

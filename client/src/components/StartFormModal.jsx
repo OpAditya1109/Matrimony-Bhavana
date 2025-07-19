@@ -620,6 +620,35 @@ return (
     onChange={handleChange}
     className="border p-2 rounded w-full"
   />
+) :
+field === "height" ? (
+  <div className="flex items-center gap-2">
+    <input
+      name="height"
+      type="number"
+      min="50"
+      max="250"
+      value={formData.height}
+      onChange={handleChange}
+      className="border p-2 rounded w-full"
+      placeholder="Enter Height"
+    />
+    <span className="text-gray-600 whitespace-nowrap">cm</span>
+  </div>
+) : field === "weight" ? (
+  <div className="flex items-center gap-2">
+    <input
+      name="weight"
+      type="number"
+      min="20"
+      max="200"
+      value={formData.weight}
+      onChange={handleChange}
+      className="border p-2 rounded w-full"
+      placeholder="Enter Weight"
+    />
+    <span className="text-gray-600 whitespace-nowrap">kg</span>
+  </div>
 ) : (
   <input
     name={field}
