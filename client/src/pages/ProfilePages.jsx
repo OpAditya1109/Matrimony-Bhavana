@@ -8,7 +8,7 @@ const ProfilePage = () => {
   useEffect(() => {
     if (email) {
       axios
-        .get(`https://matrimony-bhavana.onrender.com/api/user?email=${email}`)
+        .get(`https://matrimony-bhavana.onrender.com/api/users/${email}`)
         .then((res) => {
           const { _id, __v, createdAt, updatedAt, referralCode, ...rest } = res.data;
 

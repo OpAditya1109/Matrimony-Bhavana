@@ -76,14 +76,20 @@ app.post("/api/users", async (req, res) => {
 app.use("/api", otpRoutes);
 // GET user by email
 app.get("/api/users/:email", async (req, res) => {
+  const start = Date.now();
   try {
-    const user = await User.findOne({ email: req.params.email }); // Replace with your DB logic
+    const user = await User.findOne({ email: req.params.email })
+      .select("-_id -__v -password")
+      .lean();
     if (!user) return res.status(404).json({ message: "User not found" });
+    const end = Date.now();
+    console.log(`User fetch took ${end - start}ms`);
     res.json(user);
   } catch (err) {
     res.status(500).json({ message: "Server error" });
   }
 });
+
 
 
 const PORT = process.env.PORT || 5000;

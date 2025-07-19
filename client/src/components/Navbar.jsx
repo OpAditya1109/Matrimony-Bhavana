@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Logo from "../assets/Matrimony-logo-wbg.png";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -9,19 +9,34 @@ const Navbar = () => {
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
- const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // ✅ Track login status
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // ✅ Check localStorage for login state on mount
+    const userEmail = localStorage.getItem("userEmail");
+    if (userEmail) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
   const handleSendOtp = async (e) => {
     e.preventDefault();
     setError("");
 
     try {
-      // Step 1: Check if user exists
-      const check = await axios.post("https://matrimony-bhavana.onrender.com/api/check-user", { email });
+      const check = await axios.post(
+        "https://matrimony-bhavana.onrender.com/api/check-user",
+        { email }
+      );
 
       if (check.data.exists) {
-        // Step 2: Send OTP
-        await axios.post("https://matrimony-bhavana.onrender.com/api/send-otp", { email });
-        setStep(2); // move to OTP input
+        await axios.post(
+          "https://matrimony-bhavana.onrender.com/api/send-otp",
+          { email }
+        );
+        setStep(2);
       } else {
         setError("User not registered.");
       }
@@ -36,11 +51,15 @@ const Navbar = () => {
     setError("");
 
     try {
-      const res = await axios.post("https://matrimony-bhavana.onrender.com/api/verify-otp", { email, otp });
+      const res = await axios.post(
+        "https://matrimony-bhavana.onrender.com/api/verify-otp",
+        { email, otp }
+      );
 
-     if (res.data.success)  {
+      if (res.data.success) {
         setShowLogin(false);
-         localStorage.setItem("userEmail", email);
+        localStorage.setItem("userEmail", email);
+        setIsLoggedIn(true); // ✅ Set login state
         navigate("/main");
       } else {
         setError("Invalid OTP");
@@ -51,11 +70,21 @@ const Navbar = () => {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("userEmail");
+    setIsLoggedIn(false);
+    navigate("/");
+  };
+
   return (
     <>
       <nav className="flex justify-between items-center px-8 py-3 shadow-md bg-white relative z-10">
         <div className="flex items-center gap-4 flex-wrap">
-          <img src={Logo} alt="Bhavana Logo" className="w-12 h-12 object-contain" />
+          <img
+            src={Logo}
+            alt="Bhavana Logo"
+            className="w-12 h-12 object-contain"
+          />
           <div className="flex flex-col leading-tight">
             <div className="text-2xl font-bold text-red-500">Bhavana</div>
             <div className="text-xs text-gray-500">Matrimony.com</div>
@@ -66,10 +95,10 @@ const Navbar = () => {
         </div>
 
         <button
-          onClick={() => setShowLogin(true)}
+          onClick={isLoggedIn ? handleLogout : () => setShowLogin(true)}
           className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
         >
-          Login
+          {isLoggedIn ? "Logout" : "Login"}
         </button>
       </nav>
 
@@ -125,7 +154,9 @@ const Navbar = () => {
                 </>
               )}
 
-              {error && <div className="text-red-500 text-sm mb-3">{error}</div>}
+              {error && (
+                <div className="text-red-500 text-sm mb-3">{error}</div>
+              )}
 
               <button
                 type="submit"
