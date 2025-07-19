@@ -4,11 +4,11 @@ import { useNavigate } from "react-router-dom";
 const MainPage = () => {
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    // Optional: clear any login state/localStorage
-    // localStorage.removeItem("token"); 
-    navigate("/"); // Redirect to login page
-  };
+//   const handleLogout = () => {
+//     // Optional: clear any login state/localStorage
+//     // localStorage.removeItem("token"); 
+//     navigate("/"); // Redirect to login page
+//   };
 
   const goToProfile = () => {
     navigate("/profile"); // Redirect to profile page
@@ -26,12 +26,12 @@ const MainPage = () => {
         >
           Profile
         </button>
-        <button
+        {/* <button
           onClick={handleLogout}
           className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded"
         >
           Logout
-        </button>
+        </button> */}
       </div>
     </div>
   );

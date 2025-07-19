@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const ProfilePage = () => {
   const [userData, setUserData] = useState(null);
   const email = localStorage.getItem("userEmail");
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (email) {
@@ -30,6 +32,12 @@ const ProfilePage = () => {
 
   return (
     <div className="p-6 max-w-3xl mx-auto">
+      <button
+        onClick={() => navigate("/main")}
+        className="mb-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-sm rounded"
+      >
+        ← Back
+      </button>
       <h2 className="text-2xl font-bold mb-4">Your Profile Details</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {Object.entries(userData).map(([key, value]) => (
