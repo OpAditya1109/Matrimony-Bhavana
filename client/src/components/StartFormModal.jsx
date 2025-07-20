@@ -388,7 +388,7 @@ hivTest:["Yes","No"],
   const groupedSections = [
     { title: "Basic Info", fields: ["profileFor", "firstName", "lastName", "dob", "gender", "age","birthTime", "birthPlace"] },
     { title: "Religious Info", fields: ["religion", "community", "subCaste", "gotra", "rashi", "nakshatra", "charan", "nadi"] },
-    { title: "Physical & Lifestyle", fields: ["bloodGroup", "maritalStatus", "motherTongue", "familyStatus", "diet", "physicallyChallenged", "height", "weight", "bodyType", "complexion"," hivTest"] },
+    { title: "Physical & Lifestyle", fields: ["bloodGroup", "maritalStatus", "motherTongue", "familyStatus", "diet", "physicallyChallenged", "height", "weight", "bodyType", "complexion","hivTest"] },
     { title: "Location", fields: ["country", "state", "location", "address", "presentAddress"] },
     { title: "Family Details", fields: ["fatherName", "fatherPhone", "fatherProfession", "motherName", "motherPhone", "motherProfession", "brotherDetails", "sisterDetails"] },
     { title: "Education & Work", fields: ["work", "education", "income", "referralCode"] },
