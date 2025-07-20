@@ -56,12 +56,18 @@ const Navbar = () => {
         { email, otp }
       );
 
-      if (res.data.success) {
-        setShowLogin(false);
-        localStorage.setItem("userEmail", email);
-        setIsLoggedIn(true); // ✅ Set login state
-        navigate("/main");
-      } else {
+     if (res.data.success) {
+  const { user } = res.data;
+
+  localStorage.setItem("userEmail", email);
+  localStorage.setItem("userId", user.userId); // 👈 Add this
+  localStorage.setItem("gender", user.gender); // 👈 Add this
+
+  setShowLogin(false);
+  setIsLoggedIn(true);
+  navigate("/main");
+}
+ else {
         setError("Invalid OTP");
       }
     } catch (err) {
