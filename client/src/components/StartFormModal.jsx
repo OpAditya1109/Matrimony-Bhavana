@@ -18,6 +18,7 @@ const StartFormModal = ({ isOpen, onClose }) => {
     firstName: "",
     lastName: "",
     dob: "",
+    gender:"",
     birthTime: "",
     birthPlace: "",
     bloodGroup: "",
@@ -71,7 +72,7 @@ const StartFormModal = ({ isOpen, onClose }) => {
   "Jain",
   "Parsi (Zoroastrian)",
   "Jewish"],
-
+gender:["Male","Female"],
   community: [
   "Agarwal",
   "Arora",
@@ -373,7 +374,7 @@ const StartFormModal = ({ isOpen, onClose }) => {
   };
 
   const groupedSections = [
-    { title: "Basic Info", fields: ["profileFor", "firstName", "lastName", "dob", "birthTime", "birthPlace"] },
+    { title: "Basic Info", fields: ["profileFor", "firstName", "lastName", "dob", "gender", "birthTime", "birthPlace"] },
     { title: "Religious Info", fields: ["religion", "community", "subCaste", "gotra", "rashi", "nakshatra", "charan", "nadi"] },
     { title: "Physical & Lifestyle", fields: ["bloodGroup", "maritalStatus", "motherTongue", "familyStatus", "diet", "physicallyChallenged", "height", "weight", "bodyType", "complexion"," hivTest"] },
     { title: "Location", fields: ["country", "state", "location", "address", "presentAddress"] },
