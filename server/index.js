@@ -92,13 +92,13 @@ app.get("/api/users/:email", async (req, res) => {
 
 // Get ALL users for MatchMaking
 app.get("/api/users", async (req, res) => {
-  const { gender } = req.query;
+  let { gender } = req.query; // use `let` instead of `const`
 
   try {
     let filter = {};
     if (gender) {
-      gender = gender.toLowerCase(); // ✅ normalize here too
-      const oppositeGender = gender === "Male" ? "Female" : "Male";
+      gender = gender.toLowerCase(); // normalize case
+      const oppositeGender = gender === "male" ? "female" : "male";
       filter.gender = oppositeGender;
     }
 
@@ -109,6 +109,7 @@ app.get("/api/users", async (req, res) => {
     res.status(500).json({ message: "Failed to fetch users" });
   }
 });
+
 // Get user by userId
 app.get("/api/users/by-id/:userId", async (req, res) => {
   try {
