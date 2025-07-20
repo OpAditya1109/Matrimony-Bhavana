@@ -1,62 +1,109 @@
-import mongoose from "mongoose";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
-const userSchema = new mongoose.Schema({
-  userId: { type: String, unique: true, required: true }, // <-- Custom ID like MAT20250712AY
+const UserProfile = () => {
+  const { userId } = useParams();
+  const [user, setUser] = useState(null);
 
-  // Personal Details
-  profileFor: { type: String, required: true },
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
-  dob: { type: String, required: true },
-  birthTime: { type: String },
-  birthPlace: { type: String },
-  bloodGroup: { type: String },
-  religion: { type: String, required: true },
-  community: { type: String, required: true },
-  subCaste: { type: String },
-  gotra: { type: String },
-  rashi: { type: String },
-  nakshatra: { type: String },
-  charan: { type: String },
-  nadi: { type: String },
-  hivTest: { type: String },
-  maritalStatus: { type: String },
-  motherTongue: { type: String },
-  familyStatus: { type: String },
-  diet: { type: String, required: true },
-  physicallyChallenged: { type: String },
-  height: { type: String, required: true },
-  weight: { type: String, required: true },
-  bodyType: { type: String },
-  complexion: { type: String },
+  useEffect(() => {
+    axios
+      .get(`https://matrimony-bhavana.onrender.com/api/users/by-id/${userId}`)
+      .then((res) => setUser(res.data))
+      .catch((err) => console.error("Failed to load user", err));
+  }, [userId]);
 
-  // Location Info
-  country: { type: String },
-  state: { type: String },
-  location: { type: String, required: true },
-  address: { type: String, required: true },
-  presentAddress: { type: String },
+  if (!user) return <p className="text-center mt-10">Loading user profile...</p>;
 
-  // Contact Info
-  email: { type: String, required: true },
-  phone: { type: String, required: true },
+  return (
+    <div className="p-6 max-w-5xl mx-auto text-gray-800 space-y-6">
+      <h1 className="text-3xl font-bold text-center mb-8">
+        {user.firstName} {user.lastName}
+      </h1>
 
-  // Family Info
-  fatherName: { type: String, required: true },
-  fatherPhone: { type: String, required: true },
-  fatherProfession: { type: String, required: true },
-  motherName: { type: String, required: true },
-  motherPhone: { type: String, required: true },
-  motherProfession: { type: String, required: true },
-  brotherDetails: { type: String },
-  sisterDetails: { type: String },
+      {/* Personal Details */}
+      <section>
+        <h2 className="text-xl font-semibold mb-2">🧍 Personal Details</h2>
+        <div className="grid grid-cols-2 gap-4">
+          <p><strong>Profile For:</strong> {user.profileFor}</p>
+          <p><strong>DOB:</strong> {user.dob}</p>
+          <p><strong>Birth Time:</strong> {user.birthTime}</p>
+          <p><strong>Birth Place:</strong> {user.birthPlace}</p>
+          <p><strong>Blood Group:</strong> {user.bloodGroup}</p>
+          <p><strong>Religion:</strong> {user.religion}</p>
+          <p><strong>Community:</strong> {user.community}</p>
+          <p><strong>Sub Caste:</strong> {user.subCaste}</p>
+          <p><strong>Gotra:</strong> {user.gotra}</p>
+          <p><strong>Rashi:</strong> {user.rashi}</p>
+          <p><strong>Nakshatra:</strong> {user.nakshatra}</p>
+          <p><strong>Charan:</strong> {user.charan}</p>
+          <p><strong>Nadi:</strong> {user.nadi}</p>
+          <p><strong>HIV Test:</strong> {user.hivTest}</p>
+          <p><strong>Marital Status:</strong> {user.maritalStatus}</p>
+          <p><strong>Mother Tongue:</strong> {user.motherTongue}</p>
+          <p><strong>Family Status:</strong> {user.familyStatus}</p>
+          <p><strong>Diet:</strong> {user.diet}</p>
+          <p><strong>Physically Challenged:</strong> {user.physicallyChallenged}</p>
+          <p><strong>Height:</strong> {user.height}</p>
+          <p><strong>Weight:</strong> {user.weight}</p>
+          <p><strong>Body Type:</strong> {user.bodyType}</p>
+          <p><strong>Complexion:</strong> {user.complexion}</p>
+        </div>
+      </section>
 
-  // Career
-  work: { type: String, required: true },
-  education: { type: String, required: true },
-  income: { type: String, required: true },
+      {/* Location Info */}
+      <section>
+        <h2 className="text-xl font-semibold mb-2">📍 Location Information</h2>
+        <div className="grid grid-cols-2 gap-4">
+          <p><strong>Country:</strong> {user.country}</p>
+          <p><strong>State:</strong> {user.state}</p>
+          <p><strong>City/Location:</strong> {user.location}</p>
+          <p><strong>Permanent Address:</strong> {user.address}</p>
+          <p><strong>Present Address:</strong> {user.presentAddress}</p>
+        </div>
+      </section>
 
-  referralCode: { type: String },
-}, { timestamps: true });
+      {/* Career */}
+      <section>
+        <h2 className="text-xl font-semibold mb-2">💼 Career & Education</h2>
+        <div className="grid grid-cols-2 gap-4">
+          <p><strong>Profession:</strong> {user.work}</p>
+          <p><strong>Education:</strong> {user.education}</p>
+          <p><strong>Income:</strong> {user.income}</p>
+        </div>
+      </section>
 
-export default mongoose.model("User", userSchema);
+      {/* Family Info */}
+      <section>
+        <h2 className="text-xl font-semibold mb-2">👪 Family Details</h2>
+        <div className="grid grid-cols-2 gap-4">
+          <p><strong>Father's Name:</strong> {user.fatherName}</p>
+          <p><strong>Father's Phone:</strong> {user.fatherPhone}</p>
+          <p><strong>Father's Profession:</strong> {user.fatherProfession}</p>
+          <p><strong>Mother's Name:</strong> {user.motherName}</p>
+          <p><strong>Mother's Phone:</strong> {user.motherPhone}</p>
+          <p><strong>Mother's Profession:</strong> {user.motherProfession}</p>
+          <p><strong>Brother Details:</strong> {user.brotherDetails}</p>
+          <p><strong>Sister Details:</strong> {user.sisterDetails}</p>
+        </div>
+      </section>
+
+      {/* Contact Info */}
+      <section>
+        <h2 className="text-xl font-semibold mb-2">📞 Contact Information</h2>
+        <div className="grid grid-cols-2 gap-4">
+          <p><strong>Email:</strong> {user.email}</p>
+          <p><strong>Phone:</strong> {user.phone}</p>
+        </div>
+      </section>
+
+      {/* Referral */}
+      <section>
+        <h2 className="text-xl font-semibold mb-2">🎁 Referral Info</h2>
+        <p><strong>Referral Code:</strong> {user.referralCode || "N/A"}</p>
+      </section>
+    </div>
+  );
+};
+
+export default UserProfile;
