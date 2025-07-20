@@ -14,4 +14,4 @@ const MatchInterestSchema = new mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model("MatchInterest", MatchInterestSchema);
+export default mongoose.model("MatchInterest", MatchInterestSchema);
