@@ -18,6 +18,7 @@ const StartFormModal = ({ isOpen, onClose }) => {
     firstName: "",
     lastName: "",
     dob: "",
+    age: "",
     gender:"",
     birthTime: "",
     birthPlace: "",
@@ -60,6 +61,16 @@ const StartFormModal = ({ isOpen, onClose }) => {
     phone: "",
     email: "",
   });
+const calculateAge = (dob) => {
+  const birthDate = new Date(dob);
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age;
+};
 
   const selectOptions = {
     profileFor: ["Self", "Son", "Daughter", "Brother", "Sister", "Relative", "Friend"],
@@ -374,7 +385,7 @@ gender:["Male","Female"],
   };
 
   const groupedSections = [
-    { title: "Basic Info", fields: ["profileFor", "firstName", "lastName", "dob", "gender", "birthTime", "birthPlace"] },
+    { title: "Basic Info", fields: ["profileFor", "firstName", "lastName", "dob", "gender", "age","birthTime", "birthPlace"] },
     { title: "Religious Info", fields: ["religion", "community", "subCaste", "gotra", "rashi", "nakshatra", "charan", "nadi"] },
     { title: "Physical & Lifestyle", fields: ["bloodGroup", "maritalStatus", "motherTongue", "familyStatus", "diet", "physicallyChallenged", "height", "weight", "bodyType", "complexion"," hivTest"] },
     { title: "Location", fields: ["country", "state", "location", "address", "presentAddress"] },
@@ -389,17 +400,27 @@ gender:["Male","Female"],
   ];
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    const phoneFields = ["phone", "fatherPhone", "motherPhone"];
-    if (phoneFields.includes(name) && !/^[0-9]{0,10}$/.test(value)) return;
-    const nameFields = ["firstName", "lastName", "fatherName", "motherName"];
-    if (nameFields.includes(name) && !/^[A-Za-z\s]*$/.test(value)) return;
-    setFormData({
-      ...formData,
-      [name]: value,
-      ...(name === "state" ? { location: "" } : {})
-    });
-  };
+  const { name, value } = e.target;
+  const phoneFields = ["phone", "fatherPhone", "motherPhone"];
+  if (phoneFields.includes(name) && !/^[0-9]{0,10}$/.test(value)) return;
+
+  const nameFields = ["firstName", "lastName", "fatherName", "motherName"];
+  if (nameFields.includes(name) && !/^[A-Za-z\s]*$/.test(value)) return;
+
+  let updatedFormData = { ...formData, [name]: value };
+
+  if (name === "dob") {
+    const age = calculateAge(value);
+    updatedFormData.age = age;
+  }
+
+  if (name === "state") {
+    updatedFormData.location = ""; // reset location when state changes
+  }
+
+  setFormData(updatedFormData);
+};
+
 
   const sendOtp = async () => {
     try {
