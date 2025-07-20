@@ -84,6 +84,7 @@ const calculateAge = (dob) => {
   "Parsi (Zoroastrian)",
   "Jewish"],
 gender:["Male","Female"],
+hivTest:["Yes","No"],
   community: [
   "Agarwal",
   "Arora",
