@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const MatchInterestSchema = new mongoose.Schema({
   senderId: { type: String, required: true },
