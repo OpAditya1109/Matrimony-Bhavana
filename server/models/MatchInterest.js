@@ -8,6 +8,7 @@ const MatchInterestSchema = new mongoose.Schema({
     enum: ["Free", "Premium", "Gold"],
     default: "Free"
   },
+  status: { type: String, default: "pending" },
   interestedAt: {
     type: Date,
     default: Date.now
