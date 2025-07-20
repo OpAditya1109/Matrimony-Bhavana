@@ -92,15 +92,22 @@ app.get("/api/users/:email", async (req, res) => {
 
 // Get ALL users for MatchMaking
 app.get("/api/users", async (req, res) => {
+  const { gender } = req.query;
+
   try {
-    const users = await User.find().select("-__v -password"); // exclude sensitive data
+    let filter = {};
+    if (gender) {
+      const oppositeGender = gender === "male" ? "female" : "male";
+      filter.gender = oppositeGender;
+    }
+
+    const users = await User.find(filter).select("-__v -password"); // exclude sensitive fields
     res.json(users);
   } catch (err) {
-    console.error("Error fetching all users:", err.message);
+    console.error("Error fetching users:", err.message);
     res.status(500).json({ message: "Failed to fetch users" });
   }
 });
-
 // Get user by userId
 app.get("/api/users/by-id/:userId", async (req, res) => {
   try {
