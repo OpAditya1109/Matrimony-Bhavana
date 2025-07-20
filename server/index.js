@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import User from "./models/User.js";
 import otpRoutes from "./routes/otp.js";
-
+import MatchInterest from "./models/MatchInterest.js"
 
 dotenv.config();
 
@@ -125,6 +125,30 @@ app.get("/api/users/by-id/:userId", async (req, res) => {
     res.json(user);
   } catch (err) {
     res.status(500).json({ message: "Server error" });
+  }
+});
+
+app.post("/api/match-interest", async (req, res) => {
+  const { senderId, receiverId, plan } = req.body;
+
+  if (!senderId || !receiverId) {
+    return res.status(400).json({ message: "Missing user IDs" });
+  }
+
+  try {
+    // Optional: prevent duplicate interest
+    const alreadyExists = await MatchInterest.findOne({ senderId, receiverId });
+    if (alreadyExists) {
+      return res.status(400).json({ message: "Already expressed interest" });
+    }
+
+    const newInterest = new MatchInterest({ senderId, receiverId, plan });
+    await newInterest.save();
+
+    res.status(201).json({ message: "Interest saved" });
+  } catch (err) {
+    console.error("Interest error:", err);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 

@@ -6,25 +6,31 @@ const MatchMaking = () => {
   const [matches, setMatches] = useState([]);
   const [activeTab, setActiveTab] = useState("matches"); // "matches", "activity", "plan"
   const navigate = useNavigate();
+//   const [activity, setActivity] = useState({ sent: [], received: [] });
+
 const handleInterest = async (receiverId) => {
   const senderId = localStorage.getItem("userId");
+  const plan = localStorage.getItem("plan") || "Free"; // fallback if not set
 
   if (!senderId) {
-    alert("Please login first.");
+    alert("Please log in first.");
     return;
   }
 
   try {
-    await axios.post("https://matrimony-bhavana.onrender.com/api/users/interested", {
+  await axios.post("https://matrimony-bhavana.onrender.com/api/match-interest", {
       senderId,
       receiverId,
+      plan
     });
+
     alert("Interest sent successfully!");
   } catch (error) {
     console.error("Error sending interest:", error);
-    alert("Something went wrong. Try again.");
+    alert(error.response?.data?.message || "Something went wrong.");
   }
 };
+
 
  useEffect(() => {
   const loggedInGenderRaw = localStorage.getItem("gender"); // Get raw value
