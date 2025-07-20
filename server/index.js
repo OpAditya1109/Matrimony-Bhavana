@@ -92,17 +92,24 @@ app.get("/api/users/:email", async (req, res) => {
 
 // Get ALL users for MatchMaking
 app.get("/api/users", async (req, res) => {
-  let { gender } = req.query; // use `let` instead of `const`
+  let { gender, userId } = req.query; // add userId to exclude self
 
   try {
     let filter = {};
     if (gender) {
-      gender = gender.toLowerCase(); // normalize case
-      const oppositeGender = gender === "Male" ? "Female" : "Male";
+      gender = gender.toLowerCase();
+
+      // Correct comparison using lowercase
+      const oppositeGender = gender === "male" ? "Female" : "Male";
       filter.gender = oppositeGender;
     }
 
-    const users = await User.find(filter).select("-__v -password"); // exclude sensitive fields
+    // ✅ Exclude current user if userId is provided
+    if (userId) {
+      filter.userId = { $ne: userId };
+    }
+
+    const users = await User.find(filter).select("-__v -password");
     res.json(users);
   } catch (err) {
     console.error("Error fetching users:", err.message);
