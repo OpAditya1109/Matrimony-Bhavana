@@ -26,16 +26,18 @@ const handleInterest = async (receiverId) => {
   }
 };
 
-  useEffect(() => {
-  const loggedInGender = localStorage.getItem("gender"); // assuming it's stored during login or signup
-  if (!loggedInGender) {
+ useEffect(() => {
+  const loggedInGenderRaw = localStorage.getItem("gender"); // Get raw value
+  if (!loggedInGenderRaw) {
     console.warn("No gender found in localStorage");
     return;
   }
 
+  const loggedInGender = loggedInGenderRaw.toLowerCase(); // Use a new variable name
+
   axios
     .get("https://matrimony-bhavana.onrender.com/api/users", {
-      params: { gender: loggedInGender }, // ✅ Send gender in query
+      params: { gender: loggedInGender },
     })
     .then((response) => {
       setMatches(response.data);
@@ -44,6 +46,7 @@ const handleInterest = async (receiverId) => {
       console.error("Error fetching users:", error);
     });
 }, []);
+
 
   const goToProfile = (userId) => {
     navigate(`/UserProfile/${userId}`);
