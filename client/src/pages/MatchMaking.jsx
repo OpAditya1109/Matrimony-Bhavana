@@ -6,7 +6,7 @@ const MatchMaking = () => {
   const [matches, setMatches] = useState([]);
   const [activeTab, setActiveTab] = useState("matches"); // "matches", "activity", "plan"
   const navigate = useNavigate();
-//   const [activity, setActivity] = useState({ sent: [], received: [] });
+const [activity, setActivity] = useState({ sent: [], received: [], accepted: [] });
 
 const handleInterest = async (receiverId) => {
   const senderId = localStorage.getItem("userId");
@@ -50,6 +50,21 @@ const handleInterest = async (receiverId) => {
     })
     .catch((error) => {
       console.error("Error fetching users:", error);
+    });
+}, []);
+useEffect(() => {
+  const userId = localStorage.getItem("userId");
+  if (!userId) return;
+
+  axios
+    .get(`https://matrimony-bhavana.onrender.com/api/match-activity`, {
+      params: { userId }
+    })
+    .then((res) => {
+      setActivity(res.data); // ✅ this will populate sent/received/accepted tabs
+    })
+    .catch((err) => {
+      console.error("Failed to fetch activity:", err);
     });
 }, []);
 
@@ -158,14 +173,62 @@ const handleInterest = async (receiverId) => {
 
       {/* Activity Tab */}
       {activeTab === "activity" && (
-        <div className="text-center">
-          <h2 className="text-2xl font-semibold mb-4">Your Activity</h2>
-          <p>Requests Received: 0</p>
-          <p>Requests Sent: 0</p>
-          <p>Accepted Matches: 0</p>
-          {/* You can populate real data here from backend later */}
+  <div>
+    <h2 className="text-2xl font-semibold mb-4 text-center">Your Activity</h2>
+
+    {/* Received Interests */}
+    <div className="mb-8">
+      <h3 className="text-xl font-bold mb-2">Requests Received</h3>
+      {activity.received.length === 0 ? (
+        <p className="text-gray-600">No received requests</p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {activity.received.map((user) => (
+            <div key={user._id} className="border p-4 rounded-lg shadow bg-white">
+              <p className="font-semibold">{user.firstName} {user.lastName}</p>
+              <button className="mr-2 px-3 py-1 bg-green-500 text-white rounded">Accept</button>
+              <button className="px-3 py-1 bg-red-500 text-white rounded">Reject</button>
+            </div>
+          ))}
         </div>
       )}
+    </div>
+
+    {/* Sent Interests */}
+    <div className="mb-8">
+      <h3 className="text-xl font-bold mb-2">Requests Sent</h3>
+      {activity.sent.length === 0 ? (
+        <p className="text-gray-600">No sent requests</p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {activity.sent.map((user) => (
+            <div key={user._id} className="border p-4 rounded-lg shadow bg-white">
+              <p className="font-semibold">{user.firstName} {user.lastName}</p>
+              <button className="px-3 py-1 bg-yellow-600 text-white rounded">Cancel</button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+
+    {/* Accepted Matches */}
+    <div>
+      <h3 className="text-xl font-bold mb-2">Accepted Matches</h3>
+      {activity.accepted.length === 0 ? (
+        <p className="text-gray-600">No accepted matches</p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {activity.accepted.map((user) => (
+            <div key={user._id} className="border p-4 rounded-lg shadow bg-white">
+              <p className="font-semibold">{user.firstName} {user.lastName}</p>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+)}
+
 
       {/* Plan Tab */}
       {activeTab === "plan" && (

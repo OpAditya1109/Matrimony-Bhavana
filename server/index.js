@@ -152,6 +152,53 @@ app.post("/api/match-interest", async (req, res) => {
   }
 });
 
+app.get("/api/match-activity", async (req, res) => {
+  const { userId } = req.query;
+
+  try {
+    // Sent requests: where current user is sender
+    const sent = await MatchInterest.find({ senderId: userId });
+
+    // Received requests: where current user is receiver
+    const received = await MatchInterest.find({ receiverId: userId });
+
+    // Accepted matches: mutual interest
+    const accepted = await MatchInterest.find({
+      status: "accepted",
+      $or: [
+        { senderId: userId },
+        { receiverId: userId }
+      ]
+    });
+
+    // Optional: Populate user details (if needed)
+    const getUserDetails = async (matches) => {
+      return Promise.all(
+        matches.map(async (match) => {
+          const oppositeUserId = match.senderId === userId ? match.receiverId : match.senderId;
+          const user = await User.findOne({ userId: oppositeUserId });
+          return user;
+        })
+      );
+    };
+
+    const sentUsers = await getUserDetails(sent);
+    const receivedUsers = await getUserDetails(received);
+    const acceptedUsers = await getUserDetails(accepted);
+
+    res.json({
+      sent: sentUsers,
+      received: receivedUsers,
+      accepted: acceptedUsers,
+    });
+
+  } catch (error) {
+    console.error("Error fetching match activity:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT} 🔥`);
