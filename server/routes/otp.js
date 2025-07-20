@@ -39,6 +39,7 @@ router.post("/send-otp", async (req, res) => {
 });
 
 // Verify OTP and return JWT token
+// verify-otp route
 router.post("/verify-otp", async (req, res) => {
   const { email, otp } = req.body;
 
@@ -46,21 +47,21 @@ router.post("/verify-otp", async (req, res) => {
     return res.status(400).json({ success: false, message: "Invalid or expired OTP" });
   }
 
-  delete otps[email]; // ✅ Remove OTP after use
+  delete otps[email];
 
   const user = await User.findOne({ email });
   if (!user) {
     return res.status(404).json({ success: false, message: "User not found" });
   }
 
-  // ✅ Generate JWT token
   const token = jwt.sign(
     { userId: user.userId, email: user.email },
     process.env.JWT_SECRET || "your-secret-key",
     { expiresIn: "1d" }
   );
 
-  res.json({ success: true, token });
+  // 👇 Return the user info too!
+  res.json({ success: true, token, user });
 });
 
 export default router;
