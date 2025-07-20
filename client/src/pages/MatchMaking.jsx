@@ -27,15 +27,23 @@ const handleInterest = async (receiverId) => {
 };
 
   useEffect(() => {
-    axios
-      .get("https://matrimony-bhavana.onrender.com/api/users")
-      .then((response) => {
-        setMatches(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching users:", error);
-      });
-  }, []);
+  const loggedInGender = localStorage.getItem("gender"); // assuming it's stored during login or signup
+  if (!loggedInGender) {
+    console.warn("No gender found in localStorage");
+    return;
+  }
+
+  axios
+    .get("https://matrimony-bhavana.onrender.com/api/users", {
+      params: { gender: loggedInGender }, // ✅ Send gender in query
+    })
+    .then((response) => {
+      setMatches(response.data);
+    })
+    .catch((error) => {
+      console.error("Error fetching users:", error);
+    });
+}, []);
 
   const goToProfile = (userId) => {
     navigate(`/UserProfile/${userId}`);
