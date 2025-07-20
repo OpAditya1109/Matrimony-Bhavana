@@ -4,14 +4,12 @@ import { useNavigate } from "react-router-dom";
 const MainPage = () => {
   const navigate = useNavigate();
 
-//   const handleLogout = () => {
-//     // Optional: clear any login state/localStorage
-//     // localStorage.removeItem("token"); 
-//     navigate("/"); // Redirect to login page
-//   };
-
   const goToProfile = () => {
-    navigate("/profile"); // Redirect to profile page
+    navigate("/profile");
+  };
+
+  const goToMatchMaking = () => {
+    navigate("/match-making");
   };
 
   return (
@@ -26,6 +24,14 @@ const MainPage = () => {
         >
           Profile
         </button>
+
+        <button
+          onClick={goToMatchMaking}
+          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+        >
+          Match Making
+        </button>
+
         {/* <button
           onClick={handleLogout}
           className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded"

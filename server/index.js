@@ -90,6 +90,16 @@ app.get("/api/users/:email", async (req, res) => {
   }
 });
 
+// Get ALL users for MatchMaking
+app.get("/api/users", async (req, res) => {
+  try {
+    const users = await User.find().select("-__v -password"); // exclude sensitive data
+    res.json(users);
+  } catch (err) {
+    console.error("Error fetching all users:", err.message);
+    res.status(500).json({ message: "Failed to fetch users" });
+  }
+});
 
 
 const PORT = process.env.PORT || 5000;

@@ -11,6 +11,7 @@ import ContactUs from "./pages/ContactUs";
 import Blog from "./pages/Blogs"
 import MainPage from "./pages/MainPage";
 import ProfilePage from "./pages/ProfilePages"
+import MatchMaking from "./pages/MatchMaking";
 function App() {
   return (
     <BrowserRouter>
@@ -18,14 +19,15 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/terms-of-use" element={<TermsOfUse />} />
-                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-<Route path="/fraud-alert" element={<FraudAlert />} />
-<Route path="/founder-letter" element={<FounderLetter />} />
-<Route path="/aboutus" element={<Aboutus />} />
-<Route path="/contactus" element={<ContactUs />} />
-<Route path="/blog" element={<Blog />} />
-  <Route path="/main" element={<MainPage />} />
-<Route path="/profile" element={<ProfilePage />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/fraud-alert" element={<FraudAlert />} />
+        <Route path="/founder-letter" element={<FounderLetter />} />
+        <Route path="/aboutus" element={<Aboutus />} />
+        <Route path="/contactus" element={<ContactUs />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/main" element={<MainPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/Match-Making" element={<MatchMaking />} />
       </Routes>
       <Footer />
     </BrowserRouter>
