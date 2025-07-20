@@ -97,6 +97,7 @@ app.get("/api/users", async (req, res) => {
   try {
     let filter = {};
     if (gender) {
+      gender = gender.toLowerCase(); // ✅ normalize here too
       const oppositeGender = gender === "male" ? "female" : "male";
       filter.gender = oppositeGender;
     }
