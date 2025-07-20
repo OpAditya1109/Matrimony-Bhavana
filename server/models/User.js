@@ -8,6 +8,8 @@ const userSchema = new mongoose.Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   dob: { type: String, required: true },
+  age:{type: String, required: true},
+  gender:{type: String, required: true},
   birthTime: { type: String },
   birthPlace: { type: String },
   bloodGroup: { type: String },
