@@ -156,42 +156,45 @@ app.get("/api/match-activity", async (req, res) => {
   const { userId } = req.query;
 
   try {
-    // Sent requests: where current user is sender
+    // Fetch all match records related to the user
     const sent = await MatchInterest.find({ senderId: userId });
-
-    // Received requests: where current user is receiver
     const received = await MatchInterest.find({ receiverId: userId });
-
-    // Accepted matches: mutual interest
     const accepted = await MatchInterest.find({
       status: "accepted",
-      $or: [
-        { senderId: userId },
-        { receiverId: userId }
-      ]
+      $or: [{ senderId: userId }, { receiverId: userId }],
     });
 
-    // Optional: Populate user details (if needed)
-    const getUserDetails = async (matches) => {
+    // Reusable function to map and enrich match entries
+    const enrichMatches = async (matches) => {
       return Promise.all(
         matches.map(async (match) => {
-          const oppositeUserId = match.senderId === userId ? match.receiverId : match.senderId;
-          const user = await User.findOne({ userId: oppositeUserId });
-          return user;
+          const oppositeUserId =
+            match.senderId === userId ? match.receiverId : match.senderId;
+          const user = await User.findOne({ userId: oppositeUserId }).select(
+            "-password -__v"
+          );
+
+          return {
+            user,                    // full user details (excluding password)
+            matchInfo: {
+              plan: match.plan,
+              status: match.status,
+              interestedAt: match.interestedAt,
+            },
+          };
         })
       );
     };
 
-    const sentUsers = await getUserDetails(sent);
-    const receivedUsers = await getUserDetails(received);
-    const acceptedUsers = await getUserDetails(accepted);
+    const sentUsers = await enrichMatches(sent);
+    const receivedUsers = await enrichMatches(received);
+    const acceptedUsers = await enrichMatches(accepted);
 
     res.json({
       sent: sentUsers,
       received: receivedUsers,
       accepted: acceptedUsers,
     });
-
   } catch (error) {
     console.error("Error fetching match activity:", error);
     res.status(500).json({ message: "Internal Server Error" });
