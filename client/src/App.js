@@ -12,6 +12,7 @@ import Blog from "./pages/Blogs"
 import MainPage from "./pages/MainPage";
 import ProfilePage from "./pages/ProfilePages"
 import MatchMaking from "./pages/MatchMaking";
+import UserProfile from "./pages/UserProfile";
 function App() {
   return (
     <BrowserRouter>
@@ -28,6 +29,7 @@ function App() {
         <Route path="/main" element={<MainPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/Match-Making" element={<MatchMaking />} />
+         <Route path="/UserProfile/:userId" element={<UserProfile />} />
       </Routes>
       <Footer />
     </BrowserRouter>
