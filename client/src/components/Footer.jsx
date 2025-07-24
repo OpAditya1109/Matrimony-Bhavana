@@ -40,6 +40,9 @@ const Footer = () => {
   <Link to="/privacy-policy" className="hover:underline">
     Privacy Policy
   </Link>
+    <Link to="/refund-policy" className="hover:underline">
+   Refund Policy
+  </Link>
   <Link to="/fraud-alert" className="hover:underline">
     Fraud Alert
   </Link>

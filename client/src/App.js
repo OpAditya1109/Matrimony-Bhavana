@@ -13,6 +13,7 @@ import MainPage from "./pages/MainPage";
 import ProfilePage from "./pages/ProfilePages"
 import MatchMaking from "./pages/MatchMaking";
 import UserProfile from "./pages/UserProfile";
+import RefundPolicy from "./pages/RefundPolicy";
 function App() {
   return (
     <BrowserRouter>
@@ -30,6 +31,7 @@ function App() {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/Match-Making" element={<MatchMaking />} />
          <Route path="/UserProfile/:userId" element={<UserProfile />} />
+               <Route path="/refund-policy" element={<RefundPolicy />} />
       </Routes>
       <Footer />
     </BrowserRouter>
