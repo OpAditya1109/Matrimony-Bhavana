@@ -50,7 +50,7 @@ router.post("/send-otp", async (req, res) => {
   }
 });
 
-// Verify OTP and return JWT
+
 router.post("/verify-otp", async (req, res) => {
   const email = req.body.email?.trim().toLowerCase();
   const inputOtp = req.body.otp?.trim();
@@ -60,7 +60,7 @@ router.post("/verify-otp", async (req, res) => {
   }
 
   try {
-    const otpDoc = await Otp.findOne({ email });
+    const otpDoc = await Otp.findOne({ email }).sort({ createdAt: -1 });
 
     if (!otpDoc) {
       return res.status(400).json({ success: false, message: "OTP not found or expired" });
@@ -73,22 +73,19 @@ router.post("/verify-otp", async (req, res) => {
     // OTP valid – delete it
     await Otp.deleteOne({ _id: otpDoc._id });
 
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
-    }
-
+    // Just return a token allowing them to proceed with registration
     const token = jwt.sign(
-      { userId: user.userId, email: user.email },
+      { email }, // only email, no userId yet
       process.env.JWT_SECRET || "your-secret-key",
-      { expiresIn: "1d" }
+      { expiresIn: "15m" } // short-lived token for registration
     );
 
-    res.json({ success: true, token, user });
+    res.json({ success: true, token });
   } catch (err) {
     console.error("OTP verification failed:", err);
     res.status(500).json({ success: false, message: "Server error" });
   }
 });
+
 
 export default router;
