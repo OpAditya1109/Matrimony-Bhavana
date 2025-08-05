@@ -390,7 +390,7 @@ subCaste: [
   ];
 
   const nonRequiredFields = [
-    // "fatherName", "fatherPhone", "fatherProfession", "motherName", "motherPhone", "motherProfession", "brotherDetails", "sisterDetails", "hivTest",
+   "charan","gotra" ,"nadi", "nakshatra" ,"bloodGroup", "fatherName", "fatherPhone", "fatherProfession", "motherName", "motherPhone", "motherProfession", "brotherDetails", "sisterDetails", "hivTest",
      "referralCode"
   ];
 

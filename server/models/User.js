@@ -44,12 +44,13 @@ const userSchema = new mongoose.Schema({
   phone: { type: String, required: true },
 
   // Family Info
-  fatherName: { type: String, required: true },
-  fatherPhone: { type: String, required: true },
-  fatherProfession: { type: String, required: true },
-  motherName: { type: String, required: true },
-  motherPhone: { type: String, required: true },
-  motherProfession: { type: String, required: true },
+fatherName: { type: String, required: false },
+fatherPhone: { type: String, required: false },
+fatherProfession: { type: String, required: false },
+motherName: { type: String, required: false },
+motherPhone: { type: String, required: false },
+motherProfession: { type: String, required: false },
+
   brotherDetails: { type: String },
   sisterDetails: { type: String },
 
