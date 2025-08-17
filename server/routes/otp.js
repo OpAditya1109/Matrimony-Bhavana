@@ -50,7 +50,6 @@ router.post("/send-otp", async (req, res) => {
   }
 });
 
-
 router.post("/verify-otp", async (req, res) => {
   const email = req.body.email?.trim().toLowerCase();
   const inputOtp = req.body.otp?.trim();
@@ -73,19 +72,35 @@ router.post("/verify-otp", async (req, res) => {
     // OTP valid – delete it
     await Otp.deleteOne({ _id: otpDoc._id });
 
-    // Just return a token allowing them to proceed with registration
+    // Find user
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    // Create token
     const token = jwt.sign(
-      { email }, // only email, no userId yet
+      { email, userId: user.userId },
       process.env.JWT_SECRET || "your-secret-key",
-      { expiresIn: "15m" } // short-lived token for registration
+      { expiresIn: "15m" }
     );
 
-    res.json({ success: true, token });
+    // ✅ Send user object back so Navbar.js can store userId + gender
+    res.json({
+      success: true,
+      token,
+      user: {
+        userId: user.userId,
+        gender: user.gender,
+        email: user.email,
+      },
+    });
   } catch (err) {
     console.error("OTP verification failed:", err);
     res.status(500).json({ success: false, message: "Server error" });
   }
 });
+
 
 
 export default router;
