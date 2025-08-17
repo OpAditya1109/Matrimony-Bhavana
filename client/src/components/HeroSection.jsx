@@ -15,7 +15,7 @@ const HeroSection = () => {
           onClick={() => setIsModalOpen(true)}
           className="bg-red-500 text-white px-6 py-2 rounded"
         >
-          Let's Begin
+          Register Your Profile
         </button>
 
         {isModalOpen && <StartFormModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />}

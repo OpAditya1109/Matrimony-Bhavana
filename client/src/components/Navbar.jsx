@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Logo from "../assets/Matrimony-logo-wbg.png";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import StartFormModal from "./StartFormModal";
 
 const Navbar = () => {
   const [showLogin, setShowLogin] = useState(false);
@@ -10,6 +11,7 @@ const Navbar = () => {
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false); // ✅ Track login status
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -56,18 +58,17 @@ const Navbar = () => {
         { email, otp }
       );
 
-     if (res.data.success) {
-  const { user } = res.data;
+      if (res.data.success) {
+        const { user } = res.data;
 
-  localStorage.setItem("userEmail", email);
-  localStorage.setItem("userId", user.userId); // 👈 Add this
-  localStorage.setItem("gender", user.gender); // 👈 Add this
+        localStorage.setItem("userEmail", email);
+        localStorage.setItem("userId", user.userId); // 👈 Add this
+        localStorage.setItem("gender", user.gender); // 👈 Add this
 
-  setShowLogin(false);
-  setIsLoggedIn(true);
-  navigate("/main");
-}
- else {
+        setShowLogin(false);
+        setIsLoggedIn(true);
+        navigate("/main");
+      } else {
         setError("Invalid OTP");
       }
     } catch (err) {
@@ -84,7 +85,9 @@ const Navbar = () => {
 
   return (
     <>
+      {/* Navbar */}
       <nav className="flex justify-between items-center px-8 py-3 shadow-md bg-white relative z-10">
+        {/* Logo & Tagline */}
         <div className="flex items-center gap-4 flex-wrap">
           <img
             src={Logo}
@@ -100,18 +103,37 @@ const Navbar = () => {
           </div>
         </div>
 
-        <button
-          onClick={isLoggedIn ? handleLogout : () => setShowLogin(true)}
-          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
-        >
-          {isLoggedIn ? "Logout" : "Login"}
-        </button>
+        {/* Actions */}
+        <div className="flex items-center gap-4">
+          <button
+            onClick={isLoggedIn ? handleLogout : () => setShowLogin(true)}
+            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+          >
+            {isLoggedIn ? "Logout" : "Login"}
+          </button>
+
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="bg-red-500 text-white px-6 py-2 rounded hover:bg-red-600 transition"
+          >
+            Register Now
+          </button>
+        </div>
       </nav>
+
+      {/* Registration Modal */}
+      {isModalOpen && (
+        <StartFormModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
 
       {/* Login Modal */}
       {showLogin && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-[90%] max-w-sm relative">
+            {/* Close Button */}
             <button
               onClick={() => {
                 setShowLogin(false);
@@ -166,7 +188,7 @@ const Navbar = () => {
 
               <button
                 type="submit"
-                className="w-full bg-red-500 text-white py-2 rounded hover:bg-red-600"
+                className="w-full bg-red-500 text-white py-2 rounded hover:bg-red-600 transition"
               >
                 {step === 1 ? "Send OTP" : "Verify OTP"}
               </button>
@@ -179,3 +201,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+ 
