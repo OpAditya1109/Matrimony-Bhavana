@@ -50,46 +50,29 @@ router.post("/send-otp", async (req, res) => {
   }
 });
 
-router.post("/verify-otp-register", async (req, res) => {
-  const { email, otp: inputOtp, gender } = req.body;
-
+// ✅ Verify OTP (only verify, don't create user)
+app.post("/api/verify-otp-register", async (req, res) => {
   try {
-    // Get latest OTP entry
-    const otpDoc = await Otp.findOne({ email }).sort({ createdAt: -1 });
+    const { email, inputOtp } = req.body;
 
-    if (!otpDoc || otpDoc.expiresAt < new Date()) {
-      return res.status(400).json({ success: false, message: "OTP expired" });
+    const otpRecord = await Otp.findOne({ email });
+    if (!otpRecord) {
+      return res.status(400).json({ success: false, message: "OTP not found" });
     }
-    if (otpDoc.otp !== inputOtp) {
+
+    if (otpRecord.otp !== inputOtp) {
       return res.status(400).json({ success: false, message: "Invalid OTP" });
     }
 
-    // ✅ Create new user only after OTP verified
-    const newUser = new User({
-      email,
-      gender,
-      plan: "free",
-      isVerified: true,
-    });
+    // OTP valid → just return success
+    return res.json({ success: true, message: "OTP verified successfully" });
 
-    await newUser.save();
-
-    // Delete OTP after success
-    await Otp.deleteMany({ email });
-
-    // Generate token
-    const token = jwt.sign(
-      { userId: newUser._id, email: newUser.email },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
-
-    res.json({ success: true, token, user: newUser });
-  } catch (error) {
-    console.error("Error verifying OTP for register:", error);
-    res.status(500).json({ success: false, message: "Error verifying OTP" });
+  } catch (err) {
+    console.error("Error verifying OTP for register:", err);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 });
+
 
 router.post("/verify-otp-login", async (req, res) => {
   const email = req.body.email?.trim().toLowerCase();
