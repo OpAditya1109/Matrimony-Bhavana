@@ -284,7 +284,6 @@ subCaste: [
   "Yadav"
 ],
 
-
    gotra: [
   "Atri",
   "Angiras",
@@ -325,8 +324,7 @@ subCaste: [
   "Sankhyayana",
   "Other"
 ],
-
-    rashi: ["Mesh", "Vrishabh", "Mithun", "Kark", "Singh", "Kanya", "Tula", "Vrishchik", "Dhanu", "Makar", "Kumbh", "Meen"],
+  rashi: ["Mesh", "Vrishabh", "Mithun", "Kark", "Singh", "Kanya", "Tula", "Vrishchik", "Dhanu", "Makar", "Kumbh", "Meen"],
     nakshatra: ["Ashwini", "Bharani", "Krittika", "Rohini", "Mrigashira", "Ardra", "Punarvasu", "Pushya", "Ashlesha", "Magha", "Purva Phalguni", "Uttara Phalguni", "Hasta", "Chitra", "Swati", "Vishakha", "Anuradha", "Jyeshtha", "Mula", "Purva Ashadha", "Uttara Ashadha", "Shravana", "Dhanishta", "Shatabhisha", "Purva Bhadrapada", "Uttara Bhadrapada", "Revati"],
     charan: ["1", "2", "3", "4"],
     nadi: ["Aadi", "Madhya", "Antya"],

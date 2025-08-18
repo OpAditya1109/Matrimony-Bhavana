@@ -64,14 +64,29 @@ app.post("/api/users", async (req, res) => {
     await newUser.save();
 
     res.status(201).json({
+      success: true,
       message: "User saved successfully ✅",
       userId: finalUserId,
     });
-  } catch (error) {
-    console.error("Error saving user:", error.message);
-    res.status(500).json({ message: "Failed to save user ❌", error: error.message });
+  } catch (err) {
+    // Duplicate key error handler
+    if (err.code === 11000) {
+      const field = Object.keys(err.keyPattern)[0];
+      return res.status(400).json({
+        success: false,
+        message: `${field} already exists ❌`
+      });
+    }
+
+    console.error("Error saving user:", err.message);
+    res.status(500).json({
+      success: false,
+      message: "Failed to save user ❌",
+      error: err.message,
+    });
   }
 });
+
 
 app.use("/api", otpRoutes);
 // GET user by email

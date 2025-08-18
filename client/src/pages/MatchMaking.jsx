@@ -230,29 +230,52 @@ useEffect(() => {
 )}
 
 
-      {/* Plan Tab */}
-      {activeTab === "plan" && (
-        <div className="text-center">
-          <h2 className="text-2xl font-semibold mb-4">Choose a Plan</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            <div className="border rounded-xl p-4 shadow">
-              <h3 className="text-xl font-bold mb-2">Free</h3>
-              <p>Basic profile view access</p>
-              <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">Select</button>
-            </div>
-            <div className="border rounded-xl p-4 shadow">
-              <h3 className="text-xl font-bold mb-2">Premium</h3>
-              <p>Unlimited Matches + Chat + Highlighted Profile</p>
-              <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">Upgrade</button>
-            </div>
-            <div className="border rounded-xl p-4 shadow">
-              <h3 className="text-xl font-bold mb-2">Gold</h3>
-              <p>Priority Matching + Personal Manager</p>
-              <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">Upgrade</button>
-            </div>
-          </div>
-        </div>
-      )}
+ {/* Plan Tab */}
+{activeTab === "plan" && (
+  <div className="text-center">
+    <h2 className="text-2xl font-semibold mb-4">Choose a Plan</h2>
+    <div className="grid grid-cols-4 gap-6 overflow-x-auto">
+      
+      {/* Free Plan */}
+      <div className="border rounded-xl p-4 shadow min-w-[250px]">
+        <h3 className="text-xl font-bold mb-2">Free</h3>
+        <p>Includes 0 Matches</p>
+        <p className="mt-2 text-lg font-semibold">₹0 /-</p>
+        <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">Select</button>
+      </div>
+
+      {/* Premium Plan */}
+      <div className="border rounded-xl p-4 shadow min-w-[250px]">
+        <h3 className="text-xl font-bold mb-2">Premium</h3>
+        <p>Includes 5 Matches</p>
+        <p className="mt-2 text-lg font-semibold">₹1,500 /-</p>
+   
+        <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">Upgrade</button>
+      </div>
+
+      {/* Gold Plan */}
+      <div className="border rounded-xl p-4 shadow min-w-[250px]">
+        <h3 className="text-xl font-bold mb-2">Gold</h3>
+        <p>Includes 15 Matches</p>
+        <p className="mt-2 text-lg font-semibold">₹5,000 /-</p>
+     
+        <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">Upgrade</button>
+      </div>
+
+      {/* Platinum Plan */}
+      <div className="border rounded-xl p-4 shadow min-w-[250px]">
+        <h3 className="text-xl font-bold mb-2">Platinum</h3>
+        <p>Includes 30 Matches</p>
+        <p className="mt-2 text-lg font-semibold">₹15,000 /-</p>
+     
+        <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">Upgrade</button>
+      </div>
+
+    </div>
+  </div>
+)}
+
+
     </div>
   );
 };

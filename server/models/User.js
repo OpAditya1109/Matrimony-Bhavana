@@ -40,7 +40,7 @@ const userSchema = new mongoose.Schema({
   presentAddress: { type: String },
 
   // Contact Info
-  email: { type: String, required: true },
+  email: { type: String, unique: true, required: true },
   phone: { type: String, required: true },
 
   // Family Info
@@ -60,6 +60,15 @@ motherProfession: { type: String, required: false },
   income: { type: String, required: true },
 
   referralCode: { type: String },
+    plan: {
+    type: String,
+    enum: ["Free", "Premium", "Gold", "Platinum"],
+    default: "Free",
+  },
+  matchesLeft: {
+    type: Number,
+    default: 0, // free plan = 0 matches
+  }
 }, { timestamps: true });
 
 export default mongoose.model("User", userSchema);
