@@ -56,9 +56,12 @@ function PaymentPage() {
 
   // Dynamic UPI link
 // Dynamic UPI link using selected plan
+const amount = plan.price.replace(/[^\d.]/g, ""); // removes ₹, commas, /-, etc.
+
+// Dynamic UPI link
 const upiLink = `upi://pay?pa=9270096633@okbizaxis&pn=${encodeURIComponent(
   "BhavanaMatrimony"
-)}&am=${plan.price.replace("₹", "").replace(" /-", "")}&cu=INR&tn=${encodeURIComponent(
+)}&am=${amount}&cu=INR&tn=${encodeURIComponent(
   plan.name
 )}&tr=ORD${Date.now()}`;
 
