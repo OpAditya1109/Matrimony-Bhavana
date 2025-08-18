@@ -51,7 +51,7 @@ router.post("/send-otp", async (req, res) => {
 });
 
 // ✅ Verify OTP (only verify, don't create user)
-app.post("/api/verify-otp-register", async (req, res) => {
+app.post("/verify-otp-register", async (req, res) => {
   try {
     const { email, inputOtp } = req.body;
 
