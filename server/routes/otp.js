@@ -83,8 +83,14 @@ router.post("/verify-otp-login", async (req, res) => {
   }
 
   try {
-    const otpDoc = await Otp.findOne({ email }).sort({ createdAt: -1 });
+    // ✅ Step 1: Check if user exists first
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
 
+    // ✅ Step 2: Then check OTP
+    const otpDoc = await Otp.findOne({ email }).sort({ createdAt: -1 });
     if (!otpDoc) {
       return res.status(400).json({ success: false, message: "OTP not found or expired" });
     }
@@ -93,16 +99,10 @@ router.post("/verify-otp-login", async (req, res) => {
       return res.status(400).json({ success: false, message: "Invalid OTP" });
     }
 
-    // ✅ OTP valid – delete OTP entry
+    // ✅ OTP valid → delete it
     await Otp.deleteOne({ _id: otpDoc._id });
 
-    // ✅ Find existing user
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
-    }
-
-    // Create token
+    // ✅ Step 3: Create token
     const token = jwt.sign(
       { email, userId: user.userId },
       process.env.JWT_SECRET || "your-secret-key",
@@ -119,6 +119,7 @@ router.post("/verify-otp-login", async (req, res) => {
         plan: user.plan,
       },
     });
+
   } catch (err) {
     console.error("Login OTP verification failed:", err);
     res.status(500).json({ success: false, message: "Server error" });

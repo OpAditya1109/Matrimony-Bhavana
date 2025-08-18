@@ -54,7 +54,7 @@ const Navbar = () => {
 
     try {
       const res = await axios.post(
-        "https://matrimony-bhavana.onrender.com/api/verify-otp",
+        "https://matrimony-bhavana.onrender.com/api/verify-otp-login",
         { email, otp }
       );
 
