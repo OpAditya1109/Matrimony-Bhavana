@@ -51,60 +51,46 @@ router.post("/send-otp", async (req, res) => {
 });
 
 router.post("/verify-otp-register", async (req, res) => {
-  const email = req.body.email?.trim().toLowerCase();
-  const inputOtp = req.body.otp?.trim();
-
-  if (!email || !inputOtp) {
-    return res.status(400).json({ success: false, message: "Email and OTP are required" });
-  }
+  const { email, otp: inputOtp, gender } = req.body;
 
   try {
+    // Get latest OTP entry
     const otpDoc = await Otp.findOne({ email }).sort({ createdAt: -1 });
 
-    if (!otpDoc) {
-      return res.status(400).json({ success: false, message: "OTP not found or expired" });
+    if (!otpDoc || otpDoc.expiresAt < new Date()) {
+      return res.status(400).json({ success: false, message: "OTP expired" });
     }
-
     if (otpDoc.otp !== inputOtp) {
       return res.status(400).json({ success: false, message: "Invalid OTP" });
     }
 
-    // ✅ OTP valid – delete OTP entry
-    await Otp.deleteOne({ _id: otpDoc._id });
-
-    // ✅ Mark user as verified
-    const user = await User.findOneAndUpdate(
-      { email },
-      { isVerified: true },
-      { new: true }
-    );
-
-    if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
-    }
-
-    // Create token
-    const token = jwt.sign(
-      { email, userId: user.userId },
-      process.env.JWT_SECRET || "your-secret-key",
-      { expiresIn: "15m" }
-    );
-
-    res.json({
-      success: true,
-      token,
-      user: {
-        userId: user.userId,
-        gender: user.gender,
-        email: user.email,
-        plan: user.plan,
-      },
+    // ✅ Create new user only after OTP verified
+    const newUser = new User({
+      email,
+      gender,
+      plan: "free",
+      isVerified: true,
     });
-  } catch (err) {
-    console.error("Register OTP verification failed:", err);
-    res.status(500).json({ success: false, message: "Server error" });
+
+    await newUser.save();
+
+    // Delete OTP after success
+    await Otp.deleteMany({ email });
+
+    // Generate token
+    const token = jwt.sign(
+      { userId: newUser._id, email: newUser.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    res.json({ success: true, token, user: newUser });
+  } catch (error) {
+    console.error("Error verifying OTP for register:", error);
+    res.status(500).json({ success: false, message: "Error verifying OTP" });
   }
 });
+
 router.post("/verify-otp-login", async (req, res) => {
   const email = req.body.email?.trim().toLowerCase();
   const inputOtp = req.body.otp?.trim();
