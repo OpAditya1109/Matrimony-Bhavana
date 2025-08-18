@@ -216,6 +216,19 @@ app.get("/api/match-activity", async (req, res) => {
   }
 });
 
+// GET /api/user/:userId/plan
+app.get("/api/user/:userId/plan", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findOne({ userId });
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+    res.json({ success: true, plan: user.plan });
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Error fetching plan", error: err.message });
+  }
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

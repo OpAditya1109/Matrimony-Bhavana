@@ -31,6 +31,21 @@ const handleInterest = async (receiverId) => {
   }
 };
 
+const [activePlan, setActivePlan] = useState(""); // <-- new state
+
+useEffect(() => {
+  const userId = localStorage.getItem("userId");
+  if (!userId) return;
+
+  axios
+    .get(`https://matrimony-bhavana.onrender.com/api/user/${userId}/plan`)
+    .then((res) => {
+      setActivePlan(res.data.plan); // e.g., "Free", "Premium", "Gold", "Platinum"
+    })
+    .catch((err) => {
+      console.error("Error fetching user plan:", err);
+    });
+}, []);
 
  useEffect(() => {
   const loggedInGenderRaw = localStorage.getItem("gender"); // Get raw value
@@ -235,45 +250,38 @@ useEffect(() => {
   <div className="text-center">
     <h2 className="text-2xl font-semibold mb-4">Choose a Plan</h2>
     <div className="grid grid-cols-4 gap-6 overflow-x-auto">
-      
-      {/* Free Plan */}
-      <div className="border rounded-xl p-4 shadow min-w-[250px]">
-        <h3 className="text-xl font-bold mb-2">Free</h3>
-        <p>Includes 0 Matches</p>
-        <p className="mt-2 text-lg font-semibold">₹0 /-</p>
-        <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">Select</button>
-      </div>
-
-      {/* Premium Plan */}
-      <div className="border rounded-xl p-4 shadow min-w-[250px]">
-        <h3 className="text-xl font-bold mb-2">Premium</h3>
-        <p>Includes 5 Matches</p>
-        <p className="mt-2 text-lg font-semibold">₹1,500 /-</p>
-   
-        <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">Upgrade</button>
-      </div>
-
-      {/* Gold Plan */}
-      <div className="border rounded-xl p-4 shadow min-w-[250px]">
-        <h3 className="text-xl font-bold mb-2">Gold</h3>
-        <p>Includes 15 Matches</p>
-        <p className="mt-2 text-lg font-semibold">₹5,000 /-</p>
-     
-        <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">Upgrade</button>
-      </div>
-
-      {/* Platinum Plan */}
-      <div className="border rounded-xl p-4 shadow min-w-[250px]">
-        <h3 className="text-xl font-bold mb-2">Platinum</h3>
-        <p>Includes 30 Matches</p>
-        <p className="mt-2 text-lg font-semibold">₹15,000 /-</p>
-     
-        <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">Upgrade</button>
-      </div>
-
+      {[
+        { name: "Free", desc: "Includes 0 Matches", price: "₹0 /-" },
+        { name: "Premium", desc: "Includes 5 Matches", price: "₹1,500 /-" },
+        { name: "Gold", desc: "Includes 15 Matches", price: "₹5,000 /-" },
+        { name: "Platinum", desc: "Includes 30 Matches", price: "₹15,000 /-" },
+      ].map((plan) => (
+        <div
+          key={plan.name}
+          className={`border rounded-xl p-4 shadow min-w-[250px] transition 
+            ${activePlan === plan.name 
+              ? "border-blue-600 bg-blue-50 font-bold" 
+              : "border-gray-300"}`}
+        >
+          <h3 className="text-xl mb-2">{plan.name}</h3>
+          <p>{plan.desc}</p>
+          <p className="mt-2 text-lg">{plan.price}</p>
+          <button
+            className={`mt-4 px-4 py-2 rounded w-full ${
+              activePlan === plan.name
+                ? "bg-gray-400 text-white cursor-not-allowed"
+                : "bg-blue-500 text-white hover:bg-blue-600"
+            }`}
+            disabled={activePlan === plan.name}
+          >
+            {activePlan === plan.name ? "Active" : "Upgrade"}
+          </button>
+        </div>
+      ))}
     </div>
   </div>
 )}
+
 
 
     </div>
