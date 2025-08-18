@@ -18,22 +18,20 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Send OTP route
+/**
+ * ---------------------
+ * Send OTP (common)
+ * ---------------------
+ */
 router.post("/send-otp", async (req, res) => {
   const email = req.body.email?.trim().toLowerCase();
   if (!email) return res.status(400).json({ success: false, message: "Email is required" });
 
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
-  const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // Valid for 5 mins
+  const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 mins
 
   try {
-    // Optional: Prevent spamming OTP requests
-    const existingOtp = await Otp.findOne({ email });
-    if (existingOtp && existingOtp.expiresAt > new Date(Date.now() + 4 * 60 * 1000)) {
-      return res.status(429).json({ success: false, message: "Please wait before requesting another OTP" });
-    }
-
-    await Otp.deleteMany({ email }); // remove existing OTPs
+    await Otp.deleteMany({ email });
     await new Otp({ email, otp, expiresAt }).save();
 
     await transporter.sendMail({
@@ -50,7 +48,65 @@ router.post("/send-otp", async (req, res) => {
   }
 });
 
-router.post("/verify-otp", async (req, res) => {
+/**
+ * ---------------------
+ * Verify OTP - Register
+ * ---------------------
+ */
+router.post("/verify-otp/register", async (req, res) => {
+  const email = req.body.email?.trim().toLowerCase();
+  const inputOtp = req.body.otp?.trim();
+  const gender = req.body.gender;
+
+  if (!email || !inputOtp || !gender) {
+    return res.status(400).json({ success: false, message: "Email, OTP & Gender are required" });
+  }
+
+  try {
+    const otpDoc = await Otp.findOne({ email }).sort({ createdAt: -1 });
+    if (!otpDoc || otpDoc.otp !== inputOtp) {
+      return res.status(400).json({ success: false, message: "Invalid or expired OTP" });
+    }
+
+    await Otp.deleteOne({ _id: otpDoc._id });
+
+    // check if user already exists
+    let user = await User.findOne({ email });
+    if (user) {
+      return res.status(400).json({ success: false, message: "User already exists. Please login." });
+    }
+
+    // create new user
+    user = new User({
+      email,
+      gender,
+      plan: "free", // default plan
+    });
+    await user.save();
+
+    const token = jwt.sign(
+      { email, userId: user.userId },
+      process.env.JWT_SECRET || "your-secret-key",
+      { expiresIn: "15m" }
+    );
+
+    res.json({
+      success: true,
+      token,
+      user: { userId: user.userId, gender: user.gender, email: user.email },
+    });
+  } catch (err) {
+    console.error("Register OTP verification failed:", err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
+/**
+ * ---------------------
+ * Verify OTP - Login
+ * ---------------------
+ */
+router.post("/verify-otp/login", async (req, res) => {
   const email = req.body.email?.trim().toLowerCase();
   const inputOtp = req.body.otp?.trim();
 
@@ -60,28 +116,16 @@ router.post("/verify-otp", async (req, res) => {
 
   try {
     const otpDoc = await Otp.findOne({ email }).sort({ createdAt: -1 });
-
-    if (!otpDoc) {
-      return res.status(400).json({ success: false, message: "OTP not found" });
+    if (!otpDoc || otpDoc.otp !== inputOtp) {
+      return res.status(400).json({ success: false, message: "Invalid or expired OTP" });
     }
 
-    // 🚨 Check expiry
-    if (otpDoc.expiresAt < new Date()) {
-      await Otp.deleteOne({ _id: otpDoc._id });
-      return res.status(400).json({ success: false, message: "OTP expired" });
-    }
-
-    // 🚨 Check OTP match
-    if (otpDoc.otp !== inputOtp) {
-      return res.status(400).json({ success: false, message: "Invalid OTP" });
-    }
-
-    // ✅ OTP valid – delete it
     await Otp.deleteOne({ _id: otpDoc._id });
 
+    // find user
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
+      return res.status(404).json({ success: false, message: "User not registered. Please sign up." });
     }
 
     const token = jwt.sign(
@@ -93,19 +137,12 @@ router.post("/verify-otp", async (req, res) => {
     res.json({
       success: true,
       token,
-      user: {
-        userId: user.userId,
-        gender: user.gender,
-        email: user.email,
-      },
+      user: { userId: user.userId, gender: user.gender, email: user.email },
     });
   } catch (err) {
-    console.error("OTP verification failed:", err);
+    console.error("Login OTP verification failed:", err);
     res.status(500).json({ success: false, message: "Server error" });
   }
 });
-
-
-
 
 export default router;

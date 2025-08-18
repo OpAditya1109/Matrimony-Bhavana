@@ -436,7 +436,7 @@ subCaste: [
 
   const verifyOtp = async () => {
     try {
-      const res = await fetch("https://matrimony-bhavana.onrender.com/api/verify-otp", {
+      const res = await fetch("https://matrimony-bhavana.onrender.com/api/verify-otp/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: formData.email, otp })
