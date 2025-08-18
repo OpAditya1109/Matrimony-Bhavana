@@ -5,7 +5,7 @@ import cors from "cors";
 import User from "./models/User.js";
 import otpRoutes from "./routes/otp.js";
 import MatchInterest from "./models/MatchInterest.js"
-
+import paymentRoutes from './routes/paymentRoutes.js';
 dotenv.config();
 
 const app = express();
@@ -87,7 +87,7 @@ app.post("/api/users", async (req, res) => {
   }
 });
 
-
+app.use('/api/payments', paymentRoutes);
 app.use("/api", otpRoutes);
 // GET user by email
 app.get("/api/users/:email", async (req, res) => {
