@@ -53,14 +53,14 @@ router.post("/send-otp", async (req, res) => {
 // ✅ Verify OTP (only verify, don't create user)
 router.post("/verify-otp-register", async (req, res) => {
   try {
-    const { email, inputOtp } = req.body;
+   const { email, otp } = req.body;
 
     const otpRecord = await Otp.findOne({ email });
     if (!otpRecord) {
       return res.status(400).json({ success: false, message: "OTP not found" });
     }
 
-    if (otpRecord.otp !== inputOtp) {
+    if (otpRecord.otp !== otp) {
       return res.status(400).json({ success: false, message: "Invalid OTP" });
     }
 
