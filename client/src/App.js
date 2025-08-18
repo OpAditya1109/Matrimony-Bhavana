@@ -14,6 +14,7 @@ import ProfilePage from "./pages/ProfilePages"
 import MatchMaking from "./pages/MatchMaking";
 import UserProfile from "./pages/UserProfile";
 import RefundPolicy from "./pages/RefundPolicy";
+import PaymentPage from "./pages/PaymentPage";
 function App() {
   return (
     <BrowserRouter>
@@ -31,7 +32,8 @@ function App() {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/Match-Making" element={<MatchMaking />} />
          <Route path="/UserProfile/:userId" element={<UserProfile />} />
-               <Route path="/refund-policy" element={<RefundPolicy />} />
+        <Route path="/refund-policy" element={<RefundPolicy />} />
+        <Route path="/payment" element={<PaymentPage />} />
       </Routes>
       <Footer />
     </BrowserRouter>

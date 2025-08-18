@@ -6,86 +6,89 @@ const MatchMaking = () => {
   const [matches, setMatches] = useState([]);
   const [activeTab, setActiveTab] = useState("matches"); // "matches", "activity", "plan"
   const navigate = useNavigate();
-const [activity, setActivity] = useState({ sent: [], received: [], accepted: [] });
+  const [activity, setActivity] = useState({ sent: [], received: [], accepted: [] });
+  const [activePlan, setActivePlan] = useState(""); // <-- new state
 
-const handleInterest = async (receiverId) => {
-  const senderId = localStorage.getItem("userId");
-  const plan = localStorage.getItem("plan") || "Free"; // fallback if not set
+  const handleInterest = async (receiverId) => {
+    const senderId = localStorage.getItem("userId");
+    const plan = localStorage.getItem("plan") || "Free"; // fallback if not set
 
-  if (!senderId) {
-    alert("Please log in first.");
-    return;
-  }
+    if (!senderId) {
+      alert("Please log in first.");
+      return;
+    }
 
-  try {
-  await axios.post("https://matrimony-bhavana.onrender.com/api/match-interest", {
-      senderId,
-      receiverId,
-      plan
-    });
+    try {
+      await axios.post("https://matrimony-bhavana.onrender.com/api/match-interest", {
+        senderId,
+        receiverId,
+        plan
+      });
 
-    alert("Interest sent successfully!");
-  } catch (error) {
-    console.error("Error sending interest:", error);
-    alert(error.response?.data?.message || "Something went wrong.");
-  }
-};
+      alert("Interest sent successfully!");
+    } catch (error) {
+      console.error("Error sending interest:", error);
+      alert(error.response?.data?.message || "Something went wrong.");
+    }
+  };
 
-const [activePlan, setActivePlan] = useState(""); // <-- new state
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
+    if (!userId) return;
 
-useEffect(() => {
-  const userId = localStorage.getItem("userId");
-  if (!userId) return;
+    axios
+      .get(`https://matrimony-bhavana.onrender.com/api/user/${userId}/plan`)
+      .then((res) => {
+        setActivePlan(res.data.plan); // e.g., "Free", "Premium", "Gold", "Platinum"
+      })
+      .catch((err) => {
+        console.error("Error fetching user plan:", err);
+      });
+  }, []);
 
-  axios
-    .get(`https://matrimony-bhavana.onrender.com/api/user/${userId}/plan`)
-    .then((res) => {
-      setActivePlan(res.data.plan); // e.g., "Free", "Premium", "Gold", "Platinum"
-    })
-    .catch((err) => {
-      console.error("Error fetching user plan:", err);
-    });
-}, []);
+  useEffect(() => {
+    const loggedInGenderRaw = localStorage.getItem("gender"); 
+    if (!loggedInGenderRaw) {
+      console.warn("No gender found in localStorage");
+      return;
+    }
 
- useEffect(() => {
-  const loggedInGenderRaw = localStorage.getItem("gender"); // Get raw value
-  if (!loggedInGenderRaw) {
-    console.warn("No gender found in localStorage");
-    return;
-  }
+    const loggedInGender = loggedInGenderRaw.toLowerCase();
 
-  const loggedInGender = loggedInGenderRaw.toLowerCase(); // Use a new variable name
+    axios
+      .get("https://matrimony-bhavana.onrender.com/api/users", {
+        params: { gender: loggedInGender },
+      })
+      .then((response) => {
+        setMatches(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching users:", error);
+      });
+  }, []);
 
-  axios
-    .get("https://matrimony-bhavana.onrender.com/api/users", {
-      params: { gender: loggedInGender },
-    })
-    .then((response) => {
-      setMatches(response.data);
-    })
-    .catch((error) => {
-      console.error("Error fetching users:", error);
-    });
-}, []);
-useEffect(() => {
-  const userId = localStorage.getItem("userId");
-  if (!userId) return;
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
+    if (!userId) return;
 
-  axios
-    .get(`https://matrimony-bhavana.onrender.com/api/match-activity`, {
-      params: { userId }
-    })
-    .then((res) => {
-      setActivity(res.data); // ✅ this will populate sent/received/accepted tabs
-    })
-    .catch((err) => {
-      console.error("Failed to fetch activity:", err);
-    });
-}, []);
-
+    axios
+      .get(`https://matrimony-bhavana.onrender.com/api/match-activity`, {
+        params: { userId }
+      })
+      .then((res) => {
+        setActivity(res.data); 
+      })
+      .catch((err) => {
+        console.error("Failed to fetch activity:", err);
+      });
+  }, []);
 
   const goToProfile = (userId) => {
     navigate(`/UserProfile/${userId}`);
+  };
+
+  const goToPayment = (plan) => {
+    navigate("/payment", { state: { plan } }); 
   };
 
   return (
@@ -134,52 +137,49 @@ useEffect(() => {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {matches.map((user) => (
-               <div
-  key={user._id}
-  className="border rounded-xl shadow hover:shadow-lg transition duration-300 p-4 bg-white"
->
-  <div className="h-40 bg-gray-100 rounded mb-4 flex items-center justify-center text-gray-400 text-sm">
-    Photo Unavailable
-  </div>
-  <h2 className="text-xl font-semibold mb-1">
-    {user.firstName} {user.lastName}
-  </h2>
-  <p className="text-gray-700 text-sm mb-1">
-    <strong>Date of Birth:</strong> {user.dob || "N/A"}
-  </p>
-  <p className="text-gray-700 text-sm mb-1">
-    <strong>Caste:</strong> {user.subCaste || "N/A"}
-  </p>
-  <p className="text-gray-700 text-sm mb-1">
-    <strong>City:</strong> {user.location || "N/A"}
-  </p>
-  <p className="text-gray-700 text-sm mb-1">
-    <strong>Education:</strong> {user.education || "N/A"}
-  </p>
-  <p className="text-gray-700 text-sm">
-    <strong>Profession:</strong> {user.work || "N/A"}
-  </p>
+                <div
+                  key={user._id}
+                  className="border rounded-xl shadow hover:shadow-lg transition duration-300 p-4 bg-white"
+                >
+                  <div className="h-40 bg-gray-100 rounded mb-4 flex items-center justify-center text-gray-400 text-sm">
+                    Photo Unavailable
+                  </div>
+                  <h2 className="text-xl font-semibold mb-1">
+                    {user.firstName} {user.lastName}
+                  </h2>
+                  <p className="text-gray-700 text-sm mb-1">
+                    <strong>Date of Birth:</strong> {user.dob || "N/A"}
+                  </p>
+                  <p className="text-gray-700 text-sm mb-1">
+                    <strong>Caste:</strong> {user.subCaste || "N/A"}
+                  </p>
+                  <p className="text-gray-700 text-sm mb-1">
+                    <strong>City:</strong> {user.location || "N/A"}
+                  </p>
+                  <p className="text-gray-700 text-sm mb-1">
+                    <strong>Education:</strong> {user.education || "N/A"}
+                  </p>
+                  <p className="text-gray-700 text-sm">
+                    <strong>Profession:</strong> {user.work || "N/A"}
+                  </p>
 
-  {/* 👉 Interested Button */}
-  <button
-    onClick={(e) => {
-      e.stopPropagation(); // prevent navigate
-      handleInterest(user.userId);
-    }}
-    className="mt-4 w-full bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700"
-  >
-    Interested
-  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation(); 
+                      handleInterest(user.userId);
+                    }}
+                    className="mt-4 w-full bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700"
+                  >
+                    Interested
+                  </button>
 
-  {/* 👉 View Profile */}
-  <button
-    onClick={() => goToProfile(user.userId)}
-    className="mt-2 w-full bg-gray-200 text-black px-4 py-2 rounded hover:bg-gray-300"
-  >
-    View Profile
-  </button>
-</div>
-
+                  <button
+                    onClick={() => goToProfile(user.userId)}
+                    className="mt-2 w-full bg-gray-200 text-black px-4 py-2 rounded hover:bg-gray-300"
+                  >
+                    View Profile
+                  </button>
+                </div>
               ))}
             </div>
           )}
@@ -188,102 +188,99 @@ useEffect(() => {
 
       {/* Activity Tab */}
       {activeTab === "activity" && (
-  <div>
-    <h2 className="text-2xl font-semibold mb-4 text-center">Your Activity</h2>
+        <div>
+          <h2 className="text-2xl font-semibold mb-4 text-center">Your Activity</h2>
 
-    {/* Received Interests */}
-    <div className="mb-8">
-      <h3 className="text-xl font-bold mb-2">Requests Received</h3>
-      {activity.received.length === 0 ? (
-        <p className="text-gray-600">No received requests</p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {activity.received.map((user) => (
-            <div key={user._id} className="border p-4 rounded-lg shadow bg-white">
-              <p className="font-semibold">{user.firstName} {user.lastName}</p>
-              <button className="mr-2 px-3 py-1 bg-green-500 text-white rounded">Accept</button>
-              <button className="px-3 py-1 bg-red-500 text-white rounded">Reject</button>
-            </div>
-          ))}
+          {/* Received Interests */}
+          <div className="mb-8">
+            <h3 className="text-xl font-bold mb-2">Requests Received</h3>
+            {activity.received.length === 0 ? (
+              <p className="text-gray-600">No received requests</p>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {activity.received.map((user) => (
+                  <div key={user._id} className="border p-4 rounded-lg shadow bg-white">
+                    <p className="font-semibold">{user.firstName} {user.lastName}</p>
+                    <button className="mr-2 px-3 py-1 bg-green-500 text-white rounded">Accept</button>
+                    <button className="px-3 py-1 bg-red-500 text-white rounded">Reject</button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Sent Interests */}
+          <div className="mb-8">
+            <h3 className="text-xl font-bold mb-2">Requests Sent</h3>
+            {activity.sent.length === 0 ? (
+              <p className="text-gray-600">No sent requests</p>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {activity.sent.map((user) => (
+                  <div key={user._id} className="border p-4 rounded-lg shadow bg-white">
+                    <p className="font-semibold">{user.firstName} {user.lastName}</p>
+                    <button className="px-3 py-1 bg-yellow-600 text-white rounded">Cancel</button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Accepted Matches */}
+          <div>
+            <h3 className="text-xl font-bold mb-2">Accepted Matches</h3>
+            {activity.accepted.length === 0 ? (
+              <p className="text-gray-600">No accepted matches</p>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {activity.accepted.map((user) => (
+                  <div key={user._id} className="border p-4 rounded-lg shadow bg-white">
+                    <p className="font-semibold">{user.firstName} {user.lastName}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       )}
-    </div>
 
-    {/* Sent Interests */}
-    <div className="mb-8">
-      <h3 className="text-xl font-bold mb-2">Requests Sent</h3>
-      {activity.sent.length === 0 ? (
-        <p className="text-gray-600">No sent requests</p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {activity.sent.map((user) => (
-            <div key={user._id} className="border p-4 rounded-lg shadow bg-white">
-              <p className="font-semibold">{user.firstName} {user.lastName}</p>
-              <button className="px-3 py-1 bg-yellow-600 text-white rounded">Cancel</button>
-            </div>
-          ))}
+      {/* Plan Tab */}
+      {activeTab === "plan" && (
+        <div className="text-center">
+          <h2 className="text-2xl font-semibold mb-4">Choose a Plan</h2>
+          <div className="grid grid-cols-4 gap-6 overflow-x-auto">
+            {[
+              { name: "Free", desc: "Includes 0 Matches", price: "₹0 /-" },
+              { name: "Premium", desc: "Includes 5 Matches", price: "₹1,500 /-" },
+              { name: "Gold", desc: "Includes 15 Matches", price: "₹5,000 /-" },
+              { name: "Platinum", desc: "Includes 30 Matches", price: "₹15,000 /-" },
+            ].map((plan) => (
+              <div
+                key={plan.name}
+                className={`border rounded-xl p-4 shadow min-w-[250px] transition 
+                  ${activePlan === plan.name 
+                    ? "border-blue-600 bg-blue-50 font-bold" 
+                    : "border-gray-300"}`}
+              >
+                <h3 className="text-xl mb-2">{plan.name}</h3>
+                <p>{plan.desc}</p>
+                <p className="mt-2 text-lg">{plan.price}</p>
+                <button
+                  onClick={() => goToPayment(plan)} // ✅ navigate with plan info
+                  className={`mt-4 px-4 py-2 rounded w-full ${
+                    activePlan === plan.name
+                      ? "bg-gray-400 text-white cursor-not-allowed"
+                      : "bg-blue-500 text-white hover:bg-blue-600"
+                  }`}
+                  disabled={activePlan === plan.name}
+                >
+                  {activePlan === plan.name ? "Active" : "Upgrade"}
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
       )}
-    </div>
-
-    {/* Accepted Matches */}
-    <div>
-      <h3 className="text-xl font-bold mb-2">Accepted Matches</h3>
-      {activity.accepted.length === 0 ? (
-        <p className="text-gray-600">No accepted matches</p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {activity.accepted.map((user) => (
-            <div key={user._id} className="border p-4 rounded-lg shadow bg-white">
-              <p className="font-semibold">{user.firstName} {user.lastName}</p>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  </div>
-)}
-
-
- {/* Plan Tab */}
-{activeTab === "plan" && (
-  <div className="text-center">
-    <h2 className="text-2xl font-semibold mb-4">Choose a Plan</h2>
-    <div className="grid grid-cols-4 gap-6 overflow-x-auto">
-      {[
-        { name: "Free", desc: "Includes 0 Matches", price: "₹0 /-" },
-        { name: "Premium", desc: "Includes 5 Matches", price: "₹1,500 /-" },
-        { name: "Gold", desc: "Includes 15 Matches", price: "₹5,000 /-" },
-        { name: "Platinum", desc: "Includes 30 Matches", price: "₹15,000 /-" },
-      ].map((plan) => (
-        <div
-          key={plan.name}
-          className={`border rounded-xl p-4 shadow min-w-[250px] transition 
-            ${activePlan === plan.name 
-              ? "border-blue-600 bg-blue-50 font-bold" 
-              : "border-gray-300"}`}
-        >
-          <h3 className="text-xl mb-2">{plan.name}</h3>
-          <p>{plan.desc}</p>
-          <p className="mt-2 text-lg">{plan.price}</p>
-          <button
-            className={`mt-4 px-4 py-2 rounded w-full ${
-              activePlan === plan.name
-                ? "bg-gray-400 text-white cursor-not-allowed"
-                : "bg-blue-500 text-white hover:bg-blue-600"
-            }`}
-            disabled={activePlan === plan.name}
-          >
-            {activePlan === plan.name ? "Active" : "Upgrade"}
-          </button>
-        </div>
-      ))}
-    </div>
-  </div>
-)}
-
-
-
     </div>
   );
 };
