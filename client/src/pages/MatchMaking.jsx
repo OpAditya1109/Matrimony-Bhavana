@@ -245,42 +245,43 @@ const MatchMaking = () => {
       )}
 
       {/* Plan Tab */}
-      {activeTab === "plan" && (
-        <div className="text-center">
-          <h2 className="text-2xl font-semibold mb-4">Choose a Plan</h2>
-          <div className="grid grid-cols-4 gap-6 overflow-x-auto">
-            {[
-              { name: "Free", desc: "Includes 0 Matches", price: "₹0 /-" },
-              { name: "Premium", desc: "Includes 5 Matches", price: "₹1,500 /-" },
-              { name: "Gold", desc: "Includes 15 Matches", price: "₹5,000 /-" },
-              { name: "Platinum", desc: "Includes 30 Matches", price: "₹15,000 /-" },
-            ].map((plan) => (
-              <div
-                key={plan.name}
-                className={`border rounded-xl p-4 shadow min-w-[250px] transition 
-                  ${activePlan === plan.name 
-                    ? "border-blue-600 bg-blue-50 font-bold" 
-                    : "border-gray-300"}`}
-              >
-                <h3 className="text-xl mb-2">{plan.name}</h3>
-                <p>{plan.desc}</p>
-                <p className="mt-2 text-lg">{plan.price}</p>
-                <button
-                  onClick={() => goToPayment(plan)} // ✅ navigate with plan info
-                  className={`mt-4 px-4 py-2 rounded w-full ${
-                    activePlan === plan.name
-                      ? "bg-gray-400 text-white cursor-not-allowed"
-                      : "bg-blue-500 text-white hover:bg-blue-600"
-                  }`}
-                  disabled={activePlan === plan.name}
-                >
-                  {activePlan === plan.name ? "Active" : "Upgrade"}
-                </button>
-              </div>
-            ))}
-          </div>
+     {activeTab === "plan" && (
+  <div className="text-center">
+    <h2 className="text-2xl font-semibold mb-4">Choose a Plan</h2>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      {[
+        { name: "Free", desc: "Includes 0 Matches", price: "₹0 /-" },
+        { name: "Premium", desc: "Includes 5 Matches", price: "₹1,500 /-" },
+        { name: "Gold", desc: "Includes 15 Matches", price: "₹5,000 /-" },
+        { name: "Platinum", desc: "Includes 30 Matches", price: "₹15,000 /-" },
+      ].map((plan) => (
+        <div
+          key={plan.name}
+          className={`border rounded-xl p-4 shadow transition 
+            ${activePlan === plan.name 
+              ? "border-blue-600 bg-blue-50 font-bold" 
+              : "border-gray-300"}`}
+        >
+          <h3 className="text-xl mb-2">{plan.name}</h3>
+          <p>{plan.desc}</p>
+          <p className="mt-2 text-lg">{plan.price}</p>
+          <button
+            onClick={() => goToPayment(plan)}
+            className={`mt-4 px-4 py-2 rounded w-full ${
+              activePlan === plan.name
+                ? "bg-gray-400 text-white cursor-not-allowed"
+                : "bg-blue-500 text-white hover:bg-blue-600"
+            }`}
+            disabled={activePlan === plan.name}
+          >
+            {activePlan === plan.name ? "Active" : "Upgrade"}
+          </button>
         </div>
-      )}
+      ))}
+    </div>
+  </div>
+)}
+
     </div>
   );
 };
