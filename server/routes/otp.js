@@ -62,30 +62,34 @@ router.post("/verify-otp", async (req, res) => {
     const otpDoc = await Otp.findOne({ email }).sort({ createdAt: -1 });
 
     if (!otpDoc) {
-      return res.status(400).json({ success: false, message: "OTP not found or expired" });
+      return res.status(400).json({ success: false, message: "OTP not found" });
     }
 
+    // 🚨 Check expiry
+    if (otpDoc.expiresAt < new Date()) {
+      await Otp.deleteOne({ _id: otpDoc._id });
+      return res.status(400).json({ success: false, message: "OTP expired" });
+    }
+
+    // 🚨 Check OTP match
     if (otpDoc.otp !== inputOtp) {
       return res.status(400).json({ success: false, message: "Invalid OTP" });
     }
 
-    // OTP valid – delete it
+    // ✅ OTP valid – delete it
     await Otp.deleteOne({ _id: otpDoc._id });
 
-    // Find user
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ success: false, message: "User not found" });
     }
 
-    // Create token
     const token = jwt.sign(
       { email, userId: user.userId },
       process.env.JWT_SECRET || "your-secret-key",
       { expiresIn: "15m" }
     );
 
-    // ✅ Send user object back so Navbar.js can store userId + gender
     res.json({
       success: true,
       token,
@@ -100,6 +104,7 @@ router.post("/verify-otp", async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 });
+
 
 
 

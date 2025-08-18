@@ -72,7 +72,7 @@ const calculateAge = (dob) => {
   return age;
 };
 
-  const selectOptions = {
+ const selectOptions = {
     profileFor: ["Self", "Son", "Daughter", "Brother", "Sister", "Relative", "Friend"],
    religion: [
   "Hindu",
