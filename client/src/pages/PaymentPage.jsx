@@ -55,7 +55,7 @@ function PaymentPage() {
   }
 
   // Dynamic UPI link
-  const upiLink = `upi://pay?pa=yourupiid@okicici&pn=YourBusiness&am=${plan.price.replace("₹","").replace(" /-","")}&cu=INR&tn=${encodeURIComponent(plan.name)}&tr=ORD${Date.now()}`;
+const upiLink = `upi://pay?pa=9270096633@okbizaxis&pn=${encodeURIComponent("Bhavana Matrimony")}&am=${plan.price.replace("₹","").replace(" /-","")}&cu=INR&tn=${encodeURIComponent(plan.name)}&tr=ORD${Date.now()}`;
 
   return (
     <div className="flex flex-col items-center py-10 min-h-screen">
