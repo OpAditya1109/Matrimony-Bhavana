@@ -29,7 +29,7 @@ function PaymentPage() {
     }
 
     try {
-      const res = await axios.post("https://matrimony-bhavana.onrender.com/api/payments/verify", {
+      const res = await axios.post("https://matrimony-bhavana.onrender.com/api/payment/verify", {
         userId: localStorage.getItem("userId"),
         txnId,
         plan: plan.name,
